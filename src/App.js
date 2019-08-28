@@ -10,53 +10,74 @@ import Paper from '@material-ui/core/Paper';
 const useStyles = makeStyles(theme => ({
     root: {
         width: '25%',
-        marginTop: theme.spacing(5),
+        margin: theme.spacing(10),
         overflowX: 'auto',
     },
     table: {
-        // minWidth: 1,
+        minWidth: 10,
     },
 }));
 
-function createData(name, calories, fat, carbs, protein) {
-    return { name, calories, fat, carbs, protein };
+function createData(id, nome) {
+    return {id, nome};
 }
 
-function checkRow(rowName) {
-    if (rowName) {
-        return {rowName};
+const meses = ["JAN", "FEV", "MAR", "ABR", "MAI", "JUN",
+  "JUL", "AGO", "SET", "OUT", "NOV", "DEZ"
+];
+
+const semana = ["D", "2º", "3º", "4º", "5º", "6º", "S"];
+
+var dt = new Date();
+
+function mes() {
+    return meses[dt.getMonth()];
+}
+
+function diaSemana() {
+    return semana[dt.getDay()];
+}
+
+function teste() {
+    var now = new Date();
+    var daysOfYear = [];
+    for (var d = new Date(2012, 0, 1); d <= now; d.setDate(d.getDate() + 1)) {
+        daysOfYear.push(new Date(d));
     }
-    return {rowName};
 }
 
 const rows = [
-    createData('AGO', '5º', 1, 'Maria', 4.0),
-    createData('AGO', 'D', 3, 37, 4.3),
-    createData('AGO', '2º', 5, 24, 6.0),
-    createData('AGO', '5º', 7, 67, 4.3),
-    createData('AGO', 'D', 9, 49, 3.9),
+    createData(1, 'Maria'),
+    createData(2, 'Maria'),
+    createData(3, 'Maria'),
+    createData(4, 'Maria'),
+    createData(5, 'Maria'),
 ];
 
 export default function SimpleTable() {
     const classes = useStyles();
-
+ 
     return (
         <Paper className={classes.root}>
+         
             <Table className={classes.table}>
                 <TableHead>
                     <TableRow>
                         <TableCell colSpan={3} align="center">Data</TableCell>
-                        <TableCell colSpan={2} align="center">Irmãs</TableCell>
+                        <TableCell align="center">Irmãs</TableCell>
                     </TableRow>
                 </TableHead>
                 <TableBody>
-                    {rows.map(row => (
-                        <TableRow key={row.name}>
-                            <TableCell rowSpan={5} >{row.name}</TableCell>
-                            <TableCell>{row.calories}</TableCell>
-                            <TableCell align="center">{row.fat}</TableCell>
-                            <TableCell align="center">{row.carbs}</TableCell>
-                            <TableCell align="center">{row.protein}</TableCell>
+                    <TableRow>
+                        <TableCell align="center" rowSpan={6}>{mes()}</TableCell>
+                    </TableRow>
+
+                    {rows.map(row => (                        
+                        <TableRow key={row.id}>
+                            <TableCell align="center">{diaSemana()}</TableCell>
+                            <TableCell align="center">{dt.getDate()}</TableCell>
+                            <TableCell align="center">{row.nome}</TableCell>
+                            <TableCell align="center">{teste()}</TableCell>
                         </TableRow>
                     ))}
                 </TableBody>
