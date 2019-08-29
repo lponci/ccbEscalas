@@ -1,11 +1,7 @@
 import React from 'react';
-import { makeStyles } from '@material-ui/core/styles';
-import Table from '@material-ui/core/Table';
-import TableBody from '@material-ui/core/TableBody';
-import TableCell from '@material-ui/core/TableCell';
-import TableHead from '@material-ui/core/TableHead';
-import TableRow from '@material-ui/core/TableRow';
-import Paper from '@material-ui/core/Paper';
+import "./App.css";
+import { Icon, Table } from 'semantic-ui-react'
+import { makeStyles } from '@material-ui/core/styles'
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -18,70 +14,68 @@ const useStyles = makeStyles(theme => ({
     },
 }));
 
-function createData(id, nome) {
-    return {id, nome};
-}
-
 const meses = ["JAN", "FEV", "MAR", "ABR", "MAI", "JUN",
   "JUL", "AGO", "SET", "OUT", "NOV", "DEZ"
 ];
 
 const semana = ["D", "2º", "3º", "4º", "5º", "6º", "S"];
 
-var dt = new Date();
+const now = new Date();
+const daysOfYear = [];
 
 function mes() {
-    return meses[dt.getMonth()];
+    return meses[now.getMonth()];
 }
 
-function diaSemana() {
+function diaSemana(dt) {
     return semana[dt.getDay()];
 }
 
 function teste() {
-    var now = new Date();
-    var daysOfYear = [];
-    for (var d = new Date(2012, 0, 1); d <= now; d.setDate(d.getDate() + 1)) {
-        daysOfYear.push(new Date(d));
-    }
-}
+    var dtInicio = new Date(now.getFullYear(), now.getMonth(), 1);
+    var dtFim = new Date(now.getFullYear(), now.getMonth() + 1, 0);
+    for (var d = dtInicio; d <= dtFim; d.setDate(d.getDate() + 1)) {
+        if (d.getDay() === 1 || d.getDay() === 4){
+            daysOfYear.push(
+                <Table.Row>
+                    <Table.Cell textAlign="center">{diaSemana(d)}</Table.Cell>
+                    <Table.Cell textAlign="center">{d.getDate()}</Table.Cell>
+                    <Table.Cell textAlign="center">Maria</Table.Cell>
+                </Table.Row>
+            );
+        }
 
-const rows = [
-    createData(1, 'Maria'),
-    createData(2, 'Maria'),
-    createData(3, 'Maria'),
-    createData(4, 'Maria'),
-    createData(5, 'Maria'),
-];
+        if (d.getDay() === 0){
+            daysOfYear.push(
+                <Table.Row>
+                    <Table.Cell negative textAlign="center">{diaSemana(d)}</Table.Cell>
+                    <Table.Cell negative textAlign="center">{d.getDate()}</Table.Cell>
+                    <Table.Cell textAlign="center">Maria</Table.Cell>
+                </Table.Row>
+            );
+        }
+    }
+    return daysOfYear;
+};
 
 export default function SimpleTable() {
-    const classes = useStyles();
+    var lista = teste()
  
-    return (
-        <Paper className={classes.root}>
-         
-            <Table className={classes.table}>
-                <TableHead>
-                    <TableRow>
-                        <TableCell colSpan={3} align="center">Data</TableCell>
-                        <TableCell align="center">Irmãs</TableCell>
-                    </TableRow>
-                </TableHead>
-                <TableBody>
-                    <TableRow>
-                        <TableCell align="center" rowSpan={6}>{mes()}</TableCell>
-                    </TableRow>
-
-                    {rows.map(row => (                        
-                        <TableRow key={row.id}>
-                            <TableCell align="center">{diaSemana()}</TableCell>
-                            <TableCell align="center">{dt.getDate()}</TableCell>
-                            <TableCell align="center">{row.nome}</TableCell>
-                            <TableCell align="center">{teste()}</TableCell>
-                        </TableRow>
-                    ))}
-                </TableBody>
+    return (        
+            <Table celled className="tabela">
+                <Table.Header>
+                    <Table.Row>
+                        <Table.HeaderCell collapsing colSpan={3} textAlign="center">Data</Table.HeaderCell>
+                        <Table.HeaderCell textAlign="center">Irmãs</Table.HeaderCell>
+                    </Table.Row>
+                </Table.Header>
+                <Table.Body>
+                    <Table.Row>
+                        <Table.Cell width='1' textAlign="center" rowSpan={lista.length +1}>{mes()}</Table.Cell>
+                    </Table.Row>
+                    {lista}
+                </Table.Body>
             </Table>
-        </Paper>
+        
     );
 }
