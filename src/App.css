@@ -18,11 +18,13 @@
   font-size: large;
 }
 
-.tabela {
-  width: 50%;
-  size: 'small';
-  margin-top: 20px ;
-  
+.ui.table {
+  width: 20%;
+  margin: 20px ;
+}
+
+body {
+  margin: 50px ;
 }
 
 @keyframes App-logo-spin {

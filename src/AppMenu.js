@@ -1,9 +1,9 @@
 import React, { Component } from 'react'
-import { Input, Menu, Segment } from 'semantic-ui-react'
+import { Input, Menu, Icon, Dropdown } from 'semantic-ui-react'
 import App from './App'
 
-export default class MenuExamplePointing extends Component {
-  state = { activeItem: 'home' }
+export default class MenuExampleTabularOnTop extends Component {
+  state = { activeItem: 'escalas' }
 
   handleItemClick = (e, { name }) => this.setState({ activeItem: name })
 
@@ -14,25 +14,35 @@ export default class MenuExamplePointing extends Component {
       <div>
         <Menu pointing>
           <Menu.Item
-            name='home'
-            active={activeItem === 'home'}
+            name='escalas'
+            active={activeItem === 'escalas'}
             onClick={this.handleItemClick}
-          />
+          >
+              <Icon name='calendar alternate outline' />
+              Escalas
+              </Menu.Item>
           <Menu.Item
             name='messages'
             active={activeItem === 'messages'}
             onClick={this.handleItemClick}
           />
           <Menu.Item
-            name='friends'
-            active={activeItem === 'friends'}
+            name='contatos'
+            active={activeItem === 'contatos'}
             onClick={this.handleItemClick}
           />
-          <Menu.Menu position='right'>
-            <Menu.Item>
-              <Input icon='search' placeholder='Search...' />
-            </Menu.Item>
-          </Menu.Menu>
+          <Dropdown item text='More' simple>
+              <Dropdown.Menu>
+                  <Dropdown.Item icon='edit' text='Cadastro' />
+                  <Dropdown.Item icon='settings' text='Configurações' />
+                </Dropdown.Menu>
+            </Dropdown>
+            
+            <Menu.Menu position='right'>
+                <Menu.Item>
+                    <Input icon='search' placeholder='Search...' />
+                </Menu.Item>
+            </Menu.Menu>
         </Menu>
 
         <App/>

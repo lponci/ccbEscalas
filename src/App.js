@@ -1,21 +1,10 @@
-import React from 'react';
+import React, { Component } from 'react';
 import "./App.css";
 import { Icon, Table } from 'semantic-ui-react'
-import { makeStyles } from '@material-ui/core/styles'
-
-const useStyles = makeStyles(theme => ({
-    root: {
-        width: '25%',
-        margin: theme.spacing(10),
-        overflowX: 'auto',
-    },
-    table: {
-        minWidth: 10,
-    },
-}));
+import { Header } from 'semantic-ui-react'
 
 const meses = ["JAN", "FEV", "MAR", "ABR", "MAI", "JUN",
-  "JUL", "AGO", "SET", "OUT", "NOV", "DEZ"
+  "JUL", "Agosto", "SET", "OUT", "NOV", "DEZ"
 ];
 
 const semana = ["D", "2º", "3º", "4º", "5º", "6º", "S"];
@@ -38,8 +27,8 @@ function teste() {
         if (d.getDay() === 1 || d.getDay() === 4){
             daysOfYear.push(
                 <Table.Row>
-                    <Table.Cell textAlign="center">{diaSemana(d)}</Table.Cell>
-                    <Table.Cell textAlign="center">{d.getDate()}</Table.Cell>
+                    <Table.Cell width='4' textAlign="center">{d.getDate()}</Table.Cell>
+                    <Table.Cell width='4' textAlign="center">{diaSemana(d)}</Table.Cell>
                     <Table.Cell textAlign="center">Maria</Table.Cell>
                 </Table.Row>
             );
@@ -48,8 +37,8 @@ function teste() {
         if (d.getDay() === 0){
             daysOfYear.push(
                 <Table.Row>
-                    <Table.Cell negative textAlign="center">{diaSemana(d)}</Table.Cell>
-                    <Table.Cell negative textAlign="center">{d.getDate()}</Table.Cell>
+                    <Table.Cell width='4' negative textAlign="center">{d.getDate()}</Table.Cell>
+                    <Table.Cell width='4' negative textAlign="center">{diaSemana(d)}</Table.Cell>
                     <Table.Cell textAlign="center">Maria</Table.Cell>
                 </Table.Row>
             );
@@ -58,24 +47,30 @@ function teste() {
     return daysOfYear;
 };
 
-export default function SimpleTable() {
-    var lista = teste()
+export default class Tabela extends Component{
+    state = { lista: teste() }
+    
  
-    return (        
-            <Table celled className="tabela">
+    render (){
+        const { lista } = this.state
+    return (      
+        <div>
+            <Header  className='tabela' as='h3' dividing>
+            {mes()}
+            </Header>
+        
+            <Table celled compact >
                 <Table.Header>
                     <Table.Row>
-                        <Table.HeaderCell collapsing colSpan={3} textAlign="center">Data</Table.HeaderCell>
+                        <Table.HeaderCell colSpan={2} textAlign="center">Data</Table.HeaderCell>
                         <Table.HeaderCell textAlign="center">Irmãs</Table.HeaderCell>
                     </Table.Row>
                 </Table.Header>
                 <Table.Body>
-                    <Table.Row>
-                        <Table.Cell width='1' textAlign="center" rowSpan={lista.length +1}>{mes()}</Table.Cell>
-                    </Table.Row>
                     {lista}
                 </Table.Body>
             </Table>
-        
-    );
-}
+            </div>
+            )
+        }
+    }
