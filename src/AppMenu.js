@@ -1,52 +1,87 @@
 import React, { Component } from 'react'
-import { Input, Menu, Icon, Dropdown } from 'semantic-ui-react'
+import { Grid, Menu, Icon, Dropdown, Segment } from 'semantic-ui-react'
+
 import App from './App'
 
-export default class MenuExampleTabularOnTop extends Component {
-  state = { activeItem: 'escalas' }
-
+export default class MenuExampleSubMenu extends Component {
+  state = { }
+  
   handleItemClick = (e, { name }) => this.setState({ activeItem: name })
 
-  render() {
+  sayHello(e){
+    alert(`Hello ${this.props.name}`);
+  }
+
+    render() {
     const { activeItem } = this.state
 
     return (
-      <div>
-        <Menu pointing>
-          <Menu.Item
-            name='escalas'
-            active={activeItem === 'escalas'}
-            onClick={this.handleItemClick}
-          >
+      
+        <Grid>
+          <Grid.Column width={3}>
+        <Menu vertical>
+          <Menu.Item>
               <Icon name='calendar alternate outline' />
               Escalas
-              </Menu.Item>
-          <Menu.Item
-            name='messages'
-            active={activeItem === 'messages'}
-            onClick={this.handleItemClick}
-          />
+              <Menu.Menu>
+            <Menu.Item
+              name='auxPorta'
+              active={activeItem === 'auxPorta'}
+              onClick={this.sayHello.bind(this)}
+            >
+              Auxiliares da Porta
+            </Menu.Item>
+            <Menu.Item
+              name='orgRjm'
+              active={activeItem === 'orgRjm'}
+              onClick={this.handleItemClick}
+            >
+              Organistas da Reunião de Jovens e Menores
+            </Menu.Item>
+            <Menu.Item
+              name='orgOficial'
+              active={activeItem === 'orgOficial'}
+              onClick={this.handleItemClick}
+            >
+              Organistas do Culto Oficial
+            </Menu.Item>
+            <Menu.Item
+              name='porteiros'
+              active={activeItem === 'porteiros'}
+              onClick={this.handleItemClick}
+            >
+              Porteiros
+            </Menu.Item>
+          </Menu.Menu>
+          </Menu.Item>
           <Menu.Item
             name='contatos'
             active={activeItem === 'contatos'}
             onClick={this.handleItemClick}
-          />
-          <Dropdown item text='More' simple>
+          >
+          <Icon name='address book outline' />
+              Contatos
+          </Menu.Item>
+
+          <Dropdown item text='More'>
               <Dropdown.Menu>
-                  <Dropdown.Item icon='edit' text='Cadastro' />
+                  <Dropdown.Item icon='add user' text='Cadastro' />
                   <Dropdown.Item icon='settings' text='Configurações' />
                 </Dropdown.Menu>
             </Dropdown>
-            
-            <Menu.Menu position='right'>
-                <Menu.Item>
-                    <Input icon='search' placeholder='Search...' />
-                </Menu.Item>
-            </Menu.Menu>
         </Menu>
+        </Grid.Column>
 
-        <App/>
-      </div>
+        <Grid.Column stretched width={12}>
+          <Segment>
+            <App/>
+            </Segment>
+        </Grid.Column>
+        
+        
+        
+    </Grid>
+      
     )
   }
 }

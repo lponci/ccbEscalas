@@ -1,24 +1,27 @@
 import React, { Component } from 'react';
 import "./App.css";
-import { Icon, Table } from 'semantic-ui-react'
+import { Divider, Grid, Table } from 'semantic-ui-react'
 import { Header } from 'semantic-ui-react'
 
-const meses = ["JAN", "FEV", "MAR", "ABR", "MAI", "JUN",
-  "JUL", "Agosto", "SET", "OUT", "NOV", "DEZ"
+const meses = ["Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho",
+  "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"
 ];
 
 const semana = ["D", "2º", "3º", "4º", "5º", "6º", "S"];
 
-const now = new Date();
+const now3 = new Date();
+const now2 = new Date("2019/09/09");
+const now = new Date("2019/10/10");
+
 const daysOfYear = [];
 
 function mes() {
     return meses[now.getMonth()];
-}
+};
 
 function diaSemana(dt) {
     return semana[dt.getDay()];
-}
+};
 
 function teste() {
     var dtInicio = new Date(now.getFullYear(), now.getMonth(), 1);
@@ -54,11 +57,17 @@ export default class Tabela extends Component{
     render (){
         const { lista } = this.state
     return (      
-        <div>
-            <Header  className='tabela' as='h3' dividing>
-            {mes()}
-            </Header>
-        
+        <Grid>
+        <Grid.Column width={4}>
+            <React.Fragment>
+                <Divider horizontal>
+                    <Header as='h4'>
+                        {/* <Icon name='calendar alternate' /> */}
+                        {mes()}
+                    </Header>
+                </Divider>
+            </React.Fragment>
+            
             <Table celled compact >
                 <Table.Header>
                     <Table.Row>
@@ -70,7 +79,9 @@ export default class Tabela extends Component{
                     {lista}
                 </Table.Body>
             </Table>
-            </div>
+            </Grid.Column>
+            </Grid>
+          
             )
         }
     }
