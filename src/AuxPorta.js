@@ -9,21 +9,25 @@ const meses = ["Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho",
 
 const semana = ["D", "2º", "3º", "4º", "5º", "6º", "S"];
 
-const now3 = new Date();
-const now2 = new Date("2019/09/09");
-const now = new Date("2019/10/10");
+function fillMonths(qtMonths) {
+    const datas = [];
+    const mesAtual = new Date();
+    for (var i = 0; i < qtMonths; i++){
+        datas.push(new Date(mesAtual.getFullYear(), mesAtual.getMonth() + i, 1));
+    }
+    return datas;
+};
 
-const daysOfYear = [];
-
-function mes() {
-    return meses[now.getMonth()];
+function getNomeMes(dt) {
+    return meses[dt.getMonth()];
 };
 
 function diaSemana(dt) {
     return semana[dt.getDay()];
 };
 
-function teste() {
+function createCells(now) {
+    const daysOfYear = [];
     var dtInicio = new Date(now.getFullYear(), now.getMonth(), 1);
     var dtFim = new Date(now.getFullYear(), now.getMonth() + 1, 0);
     for (var d = dtInicio; d <= dtFim; d.setDate(d.getDate() + 1)) {
@@ -50,38 +54,38 @@ function teste() {
     return daysOfYear;
 };
 
-export default class Tabela extends Component{
-    state = { lista: teste() }
-    
- 
+export default class AuxPorta extends Component{
+        state = fillMonths(4);
     render (){
-        const { lista } = this.state
+        
     return (      
-        <Grid>
-        <Grid.Column width={4}>
-            <React.Fragment>
-                <Divider horizontal>
-                    <Header as='h4'>
-                        {/* <Icon name='calendar alternate' /> */}
-                        {mes()}
-                    </Header>
-                </Divider>
-            </React.Fragment>
-            
-            <Table celled compact >
-                <Table.Header>
-                    <Table.Row>
-                        <Table.HeaderCell colSpan={2} textAlign="center">Data</Table.HeaderCell>
-                        <Table.HeaderCell textAlign="center">Irmãs</Table.HeaderCell>
-                    </Table.Row>
-                </Table.Header>
-                <Table.Body>
-                    {lista}
-                </Table.Body>
-            </Table>
-            </Grid.Column>
+        <Grid>{
+         this.state.map(data => (
+        <Grid.Column width='4'>
+        <React.Fragment>
+            <Divider horizontal>
+                <Header as='h4'>
+                    {getNomeMes(data)}
+                </Header>
+            </Divider>
+        </React.Fragment>
+        
+        <Table celled compact >
+            <Table.Header>
+                <Table.Row>
+                    <Table.HeaderCell colSpan={2} textAlign="center">Data</Table.HeaderCell>
+                    <Table.HeaderCell textAlign="center">Irmãs</Table.HeaderCell>
+                </Table.Row>
+            </Table.Header>
+            <Table.Body>
+                {createCells(data)}
+            </Table.Body>
+        </Table>
+        </Grid.Column>
+        ))
+         }
             </Grid>
-          
+            
             )
         }
     }

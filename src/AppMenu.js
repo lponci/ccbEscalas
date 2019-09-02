@@ -1,12 +1,12 @@
 import React, { Component } from 'react'
 import { Grid, Menu, Icon, Dropdown, Segment } from 'semantic-ui-react'
 
-import App from './App'
+import AuxPorta from './AuxPorta'
 
 export default class MenuExampleSubMenu extends Component {
   state = { }
   
-  handleItemClick = (e, { name }) => this.setState({ activeItem: name })
+  handleItemClick = (e, { name }) => this.setState({ activeItem: name }, this.sayHello(this));
 
   sayHello(e){
     alert(`Hello ${this.props.name}`);
@@ -16,8 +16,7 @@ export default class MenuExampleSubMenu extends Component {
     const { activeItem } = this.state
 
     return (
-      
-        <Grid>
+        <Grid columns={2} padded='horizontally'>
           <Grid.Column width={3}>
         <Menu vertical>
           <Menu.Item>
@@ -27,7 +26,7 @@ export default class MenuExampleSubMenu extends Component {
             <Menu.Item
               name='auxPorta'
               active={activeItem === 'auxPorta'}
-              onClick={this.sayHello.bind(this)}
+              onClick={this.handleItemClick}
             >
               Auxiliares da Porta
             </Menu.Item>
@@ -71,15 +70,12 @@ export default class MenuExampleSubMenu extends Component {
             </Dropdown>
         </Menu>
         </Grid.Column>
-
-        <Grid.Column stretched width={12}>
-          <Segment>
-            <App/>
-            </Segment>
-        </Grid.Column>
-        
-        
-        
+        <Grid.Column width={12} >
+        <Segment raised>
+          <AuxPorta/>
+          </Segment>
+      </Grid.Column>
+       
     </Grid>
       
     )
