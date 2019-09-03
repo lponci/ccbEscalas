@@ -2,15 +2,21 @@ import React, { Component } from 'react'
 import { Grid, Menu, Icon, Dropdown, Segment } from 'semantic-ui-react'
 
 import AuxPorta from './AuxPorta'
+import OrgRJM from './OrgRJM'
 
 export default class MenuExampleSubMenu extends Component {
-  state = { }
-  
-  handleItemClick = (e, { name }) => this.setState({ activeItem: name }, this.sayHello(this));
-
-  sayHello(e){
-    alert(`Hello ${this.props.name}`);
+  constructor(){
+    super()
+    this.state={
+      showMeAuxPorta: false,
+      showMeRJM: false
+      
+    }
   }
+    
+  showAux = (e, { name }) => this.setState({ activeItem: name, showMeAuxPorta: true});
+
+  showRJM = (e, { name }) => this.setState({ activeItem: name, showMeRJM: true});
 
     render() {
     const { activeItem } = this.state
@@ -26,28 +32,28 @@ export default class MenuExampleSubMenu extends Component {
             <Menu.Item
               name='auxPorta'
               active={activeItem === 'auxPorta'}
-              onClick={this.handleItemClick}
+              onClick={this.showAux}
             >
               Auxiliares da Porta
             </Menu.Item>
             <Menu.Item
               name='orgRjm'
               active={activeItem === 'orgRjm'}
-              onClick={this.handleItemClick}
+              onClick={this.showRJM}
             >
               Organistas da Reunião de Jovens e Menores
             </Menu.Item>
             <Menu.Item
               name='orgOficial'
               active={activeItem === 'orgOficial'}
-              onClick={this.handleItemClick}
+              onClick={this.showAux}
             >
               Organistas do Culto Oficial
             </Menu.Item>
             <Menu.Item
               name='porteiros'
               active={activeItem === 'porteiros'}
-              onClick={this.handleItemClick}
+              onClick={this.showRJM}
             >
               Porteiros
             </Menu.Item>
@@ -70,12 +76,24 @@ export default class MenuExampleSubMenu extends Component {
             </Dropdown>
         </Menu>
         </Grid.Column>
+        {this.state.showMeAuxPorta?
         <Grid.Column width={12} >
         <Segment raised>
           <AuxPorta/>
           </Segment>
       </Grid.Column>
-       
+      :null
+        } 
+        {this.state.showMeRJM?
+        <Grid.Column width={12} >
+        <Segment raised>
+          <OrgRJM/>
+          </Segment>
+      </Grid.Column>
+      :null
+        } 
+
+      
     </Grid>
       
     )
