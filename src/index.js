@@ -1,10 +1,10 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import AppMenu from './AppMenu';
+import Menu from './Menu';
 import './index.css';
 
 
 ReactDOM.render(
-  <AppMenu />,
+  <Menu />,
   document.getElementById('root')
 );

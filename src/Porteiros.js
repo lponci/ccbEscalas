@@ -31,12 +31,24 @@ function createCells(now) {
   var dtInicio = new Date(now.getFullYear(), now.getMonth(), 1);
   var dtFim = new Date(now.getFullYear(), now.getMonth() + 1, 0);
   for (var d = dtInicio; d <= dtFim; d.setDate(d.getDate() + 1)) {
+    if (d.getDay() === 1 || d.getDay() === 4) {
+      daysOfYear.push(
+        <Table.Row>
+          <Table.Cell width='4' textAlign="center">{d.getDate()}</Table.Cell>
+          <Table.Cell width='4' textAlign="center">{diaSemana(d)}</Table.Cell>
+          <Table.Cell textAlign="center">Joao</Table.Cell>
+          <Table.Cell textAlign="center">Paulo</Table.Cell>
+        </Table.Row>
+      );
+    }
+
     if (d.getDay() === 0) {
       daysOfYear.push(
         <Table.Row>
           <Table.Cell width='4' negative textAlign="center">{d.getDate()}</Table.Cell>
           <Table.Cell width='4' negative textAlign="center">{diaSemana(d)}</Table.Cell>
-          <Table.Cell textAlign="center">Maria</Table.Cell>
+          <Table.Cell textAlign="center">Joao</Table.Cell>
+          <Table.Cell textAlign="center">Paulo</Table.Cell>
         </Table.Row>
       );
     }
@@ -44,8 +56,8 @@ function createCells(now) {
   return daysOfYear;
 };
 
-export default class OrgRJM extends Component {
-  state = fillMonths(8);
+export default class Porteiros extends Component {
+  state = fillMonths(4);
   render() {
 
     return (
@@ -64,7 +76,7 @@ export default class OrgRJM extends Component {
               <Table.Header>
                 <Table.Row>
                   <Table.HeaderCell colSpan={2} textAlign="center">Data</Table.HeaderCell>
-                  <Table.HeaderCell textAlign="center">Irmãs</Table.HeaderCell>
+                  <Table.HeaderCell colSpan={2} textAlign="center">Irmãos</Table.HeaderCell>
                 </Table.Row>
               </Table.Header>
               <Table.Body>
