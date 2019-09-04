@@ -20,7 +20,7 @@ const normalizeInput = (value, previousValue) => {
     }
   };
 
-class Cadastro extends Component {
+  export default class Cadastro extends Component {
     constructor() {
         super();
         this.state = { phone: "", error: "" };
@@ -48,10 +48,7 @@ class Cadastro extends Component {
             placeholder='Cargo'
           />
         </Form.Group>
-        <Form.Button>Salvar</Form.Button>
       </Form>
     )
   }
 }
-
-export default Cadastro
