@@ -7,7 +7,7 @@ import Cadastro from './Cadastro'
 import Porteiros from './Porteiros';
 import ListaContato from './ListaContato';
 
-export default class MenuExampleSubMenu extends Component {
+export default class MenuPrincipal extends Component {
   constructor() {
     super()
     this.state = {
@@ -25,7 +25,7 @@ export default class MenuExampleSubMenu extends Component {
 
   showPorteiros = (e, { name }) => this.setState({ activeItem: name, showMeContatos: false, showMeRJM: false, showMeCadastro: false, showMeAuxPorta: false, showMePorteiros: true });
 
-  showCadastro = (e, { name }) => this.setState({ activeItem: name,  showMeContatos: false, showMePorteiros: false, showMeAuxPorta: false, showMeRJM: false, showMeCadastro: true });
+  showCadastro = (e, { name }) => this.setState({ activeItem: name, showMeContatos: false, showMePorteiros: false, showMeAuxPorta: false, showMeRJM: false, showMeCadastro: true });
 
   showContatos = (e, { name }) => this.setState({ activeItem: name, showMePorteiros: false, showMeAuxPorta: false, showMeRJM: false, showMeCadastro: false, showMeContatos: true });
 
@@ -33,9 +33,9 @@ export default class MenuExampleSubMenu extends Component {
     const { activeItem } = this.state
 
     return (
-      <Grid columns='2'>
-        <Grid.Column width='3'>
-          <Menu vertical>
+      <Grid columns='2' style={{ padding: '5em 1em' }}>
+        <Grid.Column style={{ width: 225 }}>
+          <Menu vertical >
             <Menu.Item>
               <Icon name='calendar alternate outline' />
               Escalas

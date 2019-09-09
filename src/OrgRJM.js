@@ -9,6 +9,8 @@ const meses = ["Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho",
 
 const semana = ["D", "2º", "3º", "4º", "5º", "6º", "S"];
 
+const nomes = ["Nayra", "Jessica", "Ana", "Rute"];
+
 function fillMonths(qtMonths) {
   const datas = [];
   const mesAtual = new Date();
@@ -26,7 +28,12 @@ function diaSemana(dt) {
   return semana[dt.getDay()];
 };
 
+function getNome(index) {
+  return nomes[index];
+};
+
 function createCells(now) {
+  var index = 0;
   const daysOfYear = [];
   var dtInicio = new Date(now.getFullYear(), now.getMonth(), 1);
   var dtFim = new Date(now.getFullYear(), now.getMonth() + 1, 0);
@@ -36,12 +43,17 @@ function createCells(now) {
         <Table.Row>
           <Table.Cell width='4' negative textAlign="center">{d.getDate()}</Table.Cell>
           <Table.Cell width='4' negative textAlign="center">{diaSemana(d)}</Table.Cell>
-          <Table.Cell textAlign="center">Maria</Table.Cell>
+          <Table.Cell textAlign="center">{getNome(index)}</Table.Cell>
         </Table.Row>
       );
     }
+    index++
+    if (index >= nomes.length){
+      index = 0;
+    }
   }
-  return daysOfYear;
+
+    return daysOfYear;
 };
 
 export default class OrgRJM extends Component {
