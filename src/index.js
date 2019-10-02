@@ -2,6 +2,7 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import React from 'react'
 import MenuPrincipal from './MenuPrincipal'
+import axios from 'axios';
 import {
   Container,
   Dropdown,
@@ -40,10 +41,10 @@ const FixedMenuLayout = () => (
 
     <MenuPrincipal />
 
-    <Segment inverted vertical style={{ padding: '4em 0em' }}>
+    <Segment bottom inverted vertical style={{ padding: '4em 0em' }}>
       <Container textAlign='center'>
-      <Image centered size='mini' src='https://cdn0.iconfinder.com/data/icons/economico-a-business-icon-set/74/calendar-calender-timetable-512.png'  />
-        {/* <Image centered size='mini' src='/logo.png' /> */}
+      {<Image centered size='mini' src='https://cdn0.iconfinder.com/data/icons/economico-a-business-icon-set/74/calendar-calender-timetable-512.png'  />
+        /* <Image centered size='mini' src='/logo.png' /> */}
         <List horizontal inverted divided link size='small'>
           <List.Item as='a' href='#'>
             @Ponci

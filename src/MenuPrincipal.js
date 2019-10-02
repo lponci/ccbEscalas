@@ -67,7 +67,7 @@ export default class MenuPrincipal extends Component {
                   onClick={this.showPorteiros}
                 >
                   Porteiros
-            </Menu.Item>
+                </Menu.Item>
               </Menu.Menu>
             </Menu.Item>
             <Menu.Item
@@ -77,7 +77,7 @@ export default class MenuPrincipal extends Component {
             >
               <Icon name='address book outline' />
               Contatos
-          </Menu.Item>
+            </Menu.Item>
 
             <Dropdown item text='Cadastros' selection icon='angle right'>
               <Dropdown.Menu>

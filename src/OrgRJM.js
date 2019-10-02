@@ -9,7 +9,7 @@ const meses = ["Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho",
 
 const semana = ["D", "2º", "3º", "4º", "5º", "6º", "S"];
 
-const nomes = ["Nayra", "Jessica", "Ana", "Rute"];
+const nomes = ["Jessica", "Nayra", "Ana", "Rute"];
 
 function fillMonths(qtMonths) {
   const datas = [];
