@@ -40,6 +40,14 @@ router.get('/getData', (req, res) => {
   });
 });
 
+router.get('/getDataById', (req, res) => {
+  const { id } = req.body;
+  Data.findById(id, (err, data) => {
+    if (err) return res.json({ success: false, error: err });
+    return res.json({ success: true, data: data });
+  });
+});
+
 // this is our update method
 // this method overwrites existing data in our database
 router.post('/updateData', (req, res) => {
@@ -65,9 +73,9 @@ router.delete('/deleteData', (req, res) => {
 router.post('/putData', (req, res) => {
   let data = new Data();
 
-  const { id, nome, cargo, phone } = req.body;
+  const { nome, cargo, phone } = req.body;
 
-  if ((!id && id !== 0) || !nome || !cargo) {
+  if (!nome || !cargo) {
     return res.json({
       success: false,
       error: 'INVALID INPUTS',
@@ -75,7 +83,7 @@ router.post('/putData', (req, res) => {
   }
   data.nome = nome;
   data.cargo = cargo;
-  data.id = id;
+  data.phone = phone;
   data.save((err) => {
     if (err) return res.json({ success: false, error: err });
     return res.json({ success: true });
