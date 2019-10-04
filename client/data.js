@@ -5,7 +5,7 @@ const DataSchema = new Schema(
   {
     nome: String,
     cargo: String,
-    phone: Number
+    phone: String
   },
   { timestamps: true }
 );

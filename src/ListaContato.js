@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { Button, Icon, Table, Modal, Radio, Form } from 'semantic-ui-react'
-import Cadastro from './Cadastro';
+import axios from 'axios'
 
 
 const options = [
@@ -26,12 +26,14 @@ export default class ListaContato extends Component {
   state = {
     data: [],
     open: false,
+    openDelete: false,
     name: '',
     cargo: '',
     submittedName: '',
     submittedPhone: '',
     submittedCargo: '',
-    phone: ''
+    phone: '',
+    itemSelected:''
   }
 
   componentDidMount() {
@@ -57,24 +59,63 @@ export default class ListaContato extends Component {
 
   show = (dimmer) => () => this.setState({ dimmer, open: true })
 
-  close = () => this.setState({ open: false, name:'', phone:'', cargo:'' })
+  close = () => this.setState({ open: false, name: '', phone: '', cargo: '' })
 
-  handleChangeRadio = (e, { value }) => this.setState({ value })  
+  toDelete = () => {
+    !this.state.value ? alert("Selecione um registro para deletar") : this.setState({ dimmer: 'dimmer', openDelete: true })
+  }
+
+  closeDelete = () => this.setState({ openDelete: false })
+
+  handleChangeRadio = (e, { value }) => this.setState({ itemSelected:value })
 
   handleChange = (e, { name, value }) => this.setState({ [name]: value })
 
-  handleSubmit = () => {
+  handlePutData = () => {
     const { name, phone, cargo } = this.state
-    this.setState({ submittedName: name, submittedPhone: phone, submittedCargo: cargo })
+    axios.post("http://localhost:3001/api/putData", {
+      nome: name,
+      cargo: cargo,
+      phone: phone
+    }).then(response => {
+      response.data.success ? this.close() : alert(response.data.error)
+    });
+  }
+
+  handleDeleteData = () => {
+    axios.delete("http://localhost:3001/api/deleteData", {
+      data: {
+        id: this.state.value
+      }
+    }).then(response => {
+      response.data.success ? this.closeDelete() : alert(response.data.error)
+    });
+  }
+
+  handleUpdateData = () => {
+    const { name, phone, cargo } = this.state
+    axios.post("http://localhost:3001/api/updateData", {
+      id: this.state.value,
+      update: {
+        nome: name,
+        cargo: cargo,
+        phone: phone
+      }
+    }).then(response => {
+      alert(response.data.error)
+      // response.data.success ? this.closeDelete() : alert(response.data.error)
+    });
   }
 
   handlePhoneChange = ({ target: { value } }) => {
     const normalized = normalizeInput(value, this.state.phone);
     this.setState({ phone: normalized });
-  };
-
+  }
+  
+  onSiteChanged = (e) => this.setState({  itemSelected: e.currentTarget.value })
+  
   render() {
-    const { open, dimmer, data, name, cargo, phone, submittedName, submittedPhone, submittedCargo } = this.state
+    const { open, openDelete, dimmer, data, name, cargo, phone } = this.state
     return (
       <div>
         <Table >
@@ -86,17 +127,17 @@ export default class ListaContato extends Component {
               <Table.HeaderCell>Cargo</Table.HeaderCell>
             </Table.Row>
           </Table.Header>
-
           <Table.Body>
-            {data.length <= 0 ? "NO DB ENTRIES YET" : data.map(dat => (
-              <Table.Row>
-                <Table.Cell width='1'>  
-                <Radio
-                  name='radioGroup'
-                  value='this'
-                  checked={this.state.value === 'this'}
-                  onChange={this.handleChangeRadio}
-                />
+            {data.map(dat => (
+              <Table.Row key={dat._id}>
+                  <Radio
+                    name='radioGroup'
+                    value={dat._id}
+                    checked={this.state.value === dat._id}
+                    onChange={this.handleChangeRadio}
+                  />
+                <Table.Cell width='1'>
+                
                 </Table.Cell>
                 <Table.Cell>{dat.nome}</Table.Cell>
                 <Table.Cell>{dat.phone}</Table.Cell>
@@ -104,7 +145,6 @@ export default class ListaContato extends Component {
               </Table.Row>
             ))}
           </Table.Body>
-
           <Table.Footer fullWidth>
             <Table.Row>
               <Table.HeaderCell colSpan='4'>
@@ -117,20 +157,24 @@ export default class ListaContato extends Component {
                 >
                   <Icon name='user' /> Novo
                 </Button>
-                <Button size='small'>
+                <Button size='small' onClick={this.handlePutData}>
                   <Icon name='edit' />
                   Editar
+                  </Button>
+                <Button size='small' color='red' onClick={this.toDelete}>
+                  <Icon name='remove user' />
+                  Deletar
                   </Button>
               </Table.HeaderCell>
             </Table.Row>
           </Table.Footer>
         </Table>
-
+        
+        {/* ADICIONAR NOVO CONTATO */}
         <Modal dimmer={dimmer} open={open} onClose={this.close}>
           <Modal.Header>Novo Cadastro</Modal.Header>
           <Modal.Content>
-
-            <Form>
+            <Form success>
               <Form.Group widths='equal'>
                 <Form.Input required fluid name='name' label='Nome' placeholder='Nome' value={name} onChange={this.handleChange} />
                 <Form.Input required fluid name='phone' label='Telefone' placeholder='(xx)xxxxx-xxxx' value={phone} onChange={this.handlePhoneChange} />
@@ -145,10 +189,8 @@ export default class ListaContato extends Component {
                   options={options}
                   placeholder='Cargo'
                 />
-
               </Form.Group>
             </Form>
-
           </Modal.Content>
           <Modal.Actions>
             <Button.Group>
@@ -161,18 +203,75 @@ export default class ListaContato extends Component {
                 icon='checkmark'
                 labelPosition='right'
                 content="Salvar"
-                onClick={this.handleSubmit}
+                onClick={this.handlePutData}
               />
             </Button.Group>
-
           </Modal.Actions>
-          {/* <strong>onChange:</strong>
-        <pre>{JSON.stringify({ name, phone, cargo }, null, 2)}</pre>
-        <strong>onSubmit:</strong>
-        <pre>{JSON.stringify({ submittedName, submittedPhone, submittedCargo }, null, 2)}</pre> */}
         </Modal>
-      </div>
 
+        {/* EDITAR CONTATO */}
+        <Modal dimmer={dimmer} open={open} onClose={this.close}>
+          <Modal.Header>Editar Cadastro</Modal.Header>
+          <Modal.Content>
+            <Form success>
+              <Form.Group widths='equal'>
+                <Form.Input required fluid name='name' label='Nome' placeholder='Nome' value={name} onChange={this.handleChange} />
+                <Form.Input required fluid name='phone' label='Telefone' placeholder='(xx)xxxxx-xxxx' value={phone} onChange={this.handlePhoneChange} />
+                <Form.Select
+                  clearable
+                  required
+                  fluid
+                  name='cargo'
+                  label='Cargo'
+                  value={cargo}
+                  onChange={this.handleChange}
+                  options={options}
+                  placeholder='Cargo'
+                />
+              </Form.Group>
+            </Form>
+          </Modal.Content>
+          <Modal.Actions>
+            <Button.Group>
+              <Button color='red' onClick={this.close}>
+                Cancelar
+            </Button>
+              <Button.Or text='ou' />
+              <Button
+                positive
+                icon='checkmark'
+                labelPosition='right'
+                content="Salvar"
+                onClick={this.handlePutData}
+              />
+            </Button.Group>
+          </Modal.Actions>
+        </Modal>
+
+        {/* DELETAR CONTATO */}
+        <Modal size='mini' dimmer={dimmer} open={openDelete} onClose={this.closeDelete}>
+          <Modal.Header>Atenção!</Modal.Header>
+          <Modal.Content>Deseja deletar o registro?</Modal.Content>
+          <Modal.Actions>
+            <Button.Group>
+              <Button color='red' onClick={this.closeDelete}>
+                Não
+            </Button>
+              <Button.Or text='ou' />
+              <Button
+                positive
+                icon='checkmark'
+                labelPosition='right'
+                content="Sim"
+                onClick={this.handleDeleteData}
+              />
+            </Button.Group>
+          </Modal.Actions>
+        </Modal>
+
+        chosen {this.state.value} 
+        chosen {this.state.itemSelected} 
+      </div>
     )
   }
 }

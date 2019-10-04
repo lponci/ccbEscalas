@@ -1,9 +1,8 @@
 import React, { Component } from 'react'
-import { Grid, Menu, Icon, Dropdown, Segment } from 'semantic-ui-react'
+import { Grid, Menu, Icon, Segment } from 'semantic-ui-react'
 
 import AuxPorta from './AuxPorta'
 import OrgRJM from './OrgRJM'
-import Cadastro from './Cadastro'
 import Porteiros from './Porteiros';
 import ListaContato from './ListaContato';
 
@@ -79,12 +78,6 @@ export default class MenuPrincipal extends Component {
               Contatos
             </Menu.Item>
 
-            <Dropdown item text='Cadastros' selection icon='angle right'>
-              <Dropdown.Menu>
-                <Dropdown.Item icon='add user' text='Novo' onClick={this.showCadastro} />
-                <Dropdown.Item icon='edit' text='Editar' />
-              </Dropdown.Menu>
-            </Dropdown>
           </Menu>
         </Grid.Column>
         {this.state.showMeAuxPorta ?
@@ -99,14 +92,6 @@ export default class MenuPrincipal extends Component {
           <Grid.Column width={12} >
             <Segment raised>
               <OrgRJM />
-            </Segment>
-          </Grid.Column>
-          : null
-        }
-        {this.state.showMeCadastro ?
-          <Grid.Column width={12} >
-            <Segment raised>
-              <Cadastro />
             </Segment>
           </Grid.Column>
           : null

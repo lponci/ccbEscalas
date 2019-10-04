@@ -79,6 +79,7 @@ router.post('/putData', (req, res) => {
     return res.json({
       success: false,
       error: 'INVALID INPUTS',
+      body: req.body
     });
   }
   data.nome = nome;

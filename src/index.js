@@ -2,7 +2,6 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import React from 'react'
 import MenuPrincipal from './MenuPrincipal'
-import axios from 'axios';
 import {
   Container,
   Dropdown,

@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import "./App.css";
 import { Divider, Grid, Table } from 'semantic-ui-react'
 import { Header } from 'semantic-ui-react'
-import axios from "axios";
 
 const meses = ["Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho",
   "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"
