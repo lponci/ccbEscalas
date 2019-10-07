@@ -4,6 +4,7 @@ var cors = require('cors');
 const bodyParser = require('body-parser');
 const logger = require('morgan');
 const Data = require('./data');
+const Cargo = require('./cargo');
 
 const API_PORT = 3001;
 const app = express();
@@ -22,6 +23,18 @@ let db = mongoose.connection;
 const timestamp = new Date();
 db.once('open', () => console.log('Connected to DB - ' + timestamp));
 
+// db.on('open', function () {
+//   db.db.listCollections().toArray(function (err, names) {
+//     if (err) {
+//       console.log(err);
+//     } else {
+//       console.log(names);
+//     }
+
+//     mongoose.connection.close();
+//   });
+// });
+
 // checks if connection with the database is successful
 db.on('error', console.error.bind(console, 'MongoDB connection error:'));
 
@@ -31,10 +44,22 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.use(logger('dev'));
 
+// ++++++++++++++++DATA base++++++++++++++++
+
 // this is our get method
 // this method fetches all available data in our database
 router.get('/getData', (req, res) => {
-  Data.find((err, data) => {
+  Data.aggregate([
+    { $lookup:
+       {
+         from: 'cargos',
+         localField: 'cargo',
+         foreignField: 'value',
+         as: 'cargo'
+       }
+     }
+    ])
+  .exec(function(err, data) {
     if (err) return res.json({ success: false, error: err });
     return res.json({ success: true, data: data });
   });
@@ -78,7 +103,7 @@ router.post('/putData', (req, res) => {
   if (!nome || !cargo) {
     return res.json({
       success: false,
-      error: 'INVALID INPUTS',
+      error: 'Campos Nome e Cargo são obrigatorios!',
       body: req.body
     });
   }
@@ -87,6 +112,52 @@ router.post('/putData', (req, res) => {
   data.phone = phone;
   data.save((err) => {
     if (err) return res.json({ success: false, error: err });
+    return res.json({ success: true });
+  });
+});
+
+
+// ++++++++++++++++CARGO base++++++++++++++++
+router.get('/getCargo', (req, res) => {
+  Cargo.find((err, cargo) => {
+    if (err) return res.json({ success: false, error: err });
+    return res.json({ success: true, cargo: cargo });
+  });
+});
+
+router.post('/putCargo', (req, res) => {
+  let cargo = new Cargo();
+
+  const { value, text, key } = req.body;
+
+  if (!value || !text || !key) {
+    return res.json({
+      success: false,
+      error: 'INVALID INPUTS',
+      body: req.body
+    });
+  }
+  cargo.value = value;
+  cargo.text = text;
+  cargo.key = key;
+  cargo.save((err) => {
+    if (err) return res.json({ success: false, error: err });
+    return res.json({ success: true });
+  });
+});
+
+router.post('/updateCargo', (req, res) => {
+  const { id, update } = req.body;
+  Cargo.findByIdAndUpdate(id, update, (err) => {
+    if (err) return res.json({ success: false, error: err });
+    return res.json({ success: true });
+  });
+});
+
+router.delete('/deleteCargo', (req, res) => {
+  const { id } = req.body;
+  Cargo.findByIdAndRemove(id, (err) => {
+    if (err) return res.send(err);
     return res.json({ success: true });
   });
 });

@@ -33,14 +33,17 @@ export default class ListaContato extends Component {
     submittedPhone: '',
     submittedCargo: '',
     phone: '',
-    itemSelected:''
+    itemSelected:'',
+    optionsCargo:[]
+
   }
 
   componentDidMount() {
     this.getDataFromDb();
+    this.getCargoFromDb();
     if (!this.state.intervalIsSet) {
       let interval = setInterval(this.getDataFromDb, 1000);
-      this.setState({ intervalIsSet: interval });
+      this.setState({ intervalIsSet: interval});
     }
   }
 
@@ -57,6 +60,12 @@ export default class ListaContato extends Component {
       .then(res => this.setState({ data: res.data }));
   }
 
+  getCargoFromDb = () => {
+    fetch("http://localhost:3001/api/getCargo")
+      .then(cargo => cargo.json())
+      .then(res => this.setState({ optionsCargo: res.cargo }));
+  }
+
   show = (dimmer) => () => this.setState({ dimmer, open: true })
 
   close = () => this.setState({ open: false, name: '', phone: '', cargo: '' })
@@ -67,9 +76,13 @@ export default class ListaContato extends Component {
 
   closeDelete = () => this.setState({ openDelete: false })
 
-  handleChangeRadio = (e, { value }) => this.setState({ itemSelected:value })
+  handleChangeRadio = (e, {value}) => {
+    this.setState({value})
+  }
 
-  handleChange = (e, { name, value }) => this.setState({ [name]: value })
+  handleChange = (e, { name, value }) => {
+    this.setState({ [name]: value })
+  }
 
   handlePutData = () => {
     const { name, phone, cargo } = this.state
@@ -111,11 +124,9 @@ export default class ListaContato extends Component {
     const normalized = normalizeInput(value, this.state.phone);
     this.setState({ phone: normalized });
   }
-  
-  onSiteChanged = (e) => this.setState({  itemSelected: e.currentTarget.value })
-  
+    
   render() {
-    const { open, openDelete, dimmer, data, name, cargo, phone } = this.state
+    const { open, openDelete, dimmer, data, name, cargo, phone, optionsCargo } = this.state
     return (
       <div>
         <Table >
@@ -130,18 +141,17 @@ export default class ListaContato extends Component {
           <Table.Body>
             {data.map(dat => (
               <Table.Row key={dat._id}>
-                  <Radio
+                <Table.Cell width='1'>
+                <Radio
                     name='radioGroup'
                     value={dat._id}
                     checked={this.state.value === dat._id}
                     onChange={this.handleChangeRadio}
                   />
-                <Table.Cell width='1'>
-                
                 </Table.Cell>
                 <Table.Cell>{dat.nome}</Table.Cell>
                 <Table.Cell>{dat.phone}</Table.Cell>
-                <Table.Cell>{dat.cargo}</Table.Cell>
+                <Table.Cell>{dat.cargo.map(dc => (dc.text))}</Table.Cell>
               </Table.Row>
             ))}
           </Table.Body>
@@ -157,7 +167,7 @@ export default class ListaContato extends Component {
                 >
                   <Icon name='user' /> Novo
                 </Button>
-                <Button size='small' onClick={this.handlePutData}>
+                <Button size='small' onClick={this.toDelete}>
                   <Icon name='edit' />
                   Editar
                   </Button>
@@ -177,7 +187,7 @@ export default class ListaContato extends Component {
             <Form success>
               <Form.Group widths='equal'>
                 <Form.Input required fluid name='name' label='Nome' placeholder='Nome' value={name} onChange={this.handleChange} />
-                <Form.Input required fluid name='phone' label='Telefone' placeholder='(xx)xxxxx-xxxx' value={phone} onChange={this.handlePhoneChange} />
+                <Form.Input fluid name='phone' label='Telefone' placeholder='(xx)xxxxx-xxxx' value={phone} onChange={this.handlePhoneChange} />
                 <Form.Select
                   clearable
                   required
@@ -186,7 +196,7 @@ export default class ListaContato extends Component {
                   label='Cargo'
                   value={cargo}
                   onChange={this.handleChange}
-                  options={options}
+                  options={optionsCargo}
                   placeholder='Cargo'
                 />
               </Form.Group>
@@ -210,7 +220,7 @@ export default class ListaContato extends Component {
         </Modal>
 
         {/* EDITAR CONTATO */}
-        <Modal dimmer={dimmer} open={open} onClose={this.close}>
+        {/* <Modal dimmer={dimmer} open={open} onClose={this.close}>
           <Modal.Header>Editar Cadastro</Modal.Header>
           <Modal.Content>
             <Form success>
@@ -246,7 +256,7 @@ export default class ListaContato extends Component {
               />
             </Button.Group>
           </Modal.Actions>
-        </Modal>
+        </Modal> */}
 
         {/* DELETAR CONTATO */}
         <Modal size='mini' dimmer={dimmer} open={openDelete} onClose={this.closeDelete}>
@@ -268,9 +278,7 @@ export default class ListaContato extends Component {
             </Button.Group>
           </Modal.Actions>
         </Modal>
-
-        chosen {this.state.value} 
-        chosen {this.state.itemSelected} 
+        {/* {optionsCargo.map(opt => {opt.text})} */}
       </div>
     )
   }
