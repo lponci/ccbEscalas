@@ -1,14 +1,8 @@
 import React, { Component } from 'react'
-import { Button, Icon, Table, Modal, Radio, Form } from 'semantic-ui-react'
+import { Button, Icon, Table, Modal, Radio, Form, Segment, Responsive } from 'semantic-ui-react'
 import axios from 'axios'
 
-
-const options = [
-  { key: 'a', text: 'Auxiliar da Porta', value: 'auxiliarPorta' },
-  { key: 'rjm', text: 'Organista RJM', value: 'orgRJM' },
-  { key: 'o', text: 'Organista Oficial', value: 'orgOficial' },
-  { key: 'p', text: 'Porteiro', value: 'porteiro' },
-]
+const host = 'http://localhost:3001/api'
 
 const normalizeInput = (value, previousValue) => {
   if (!value) return value;
@@ -26,15 +20,16 @@ export default class ListaContato extends Component {
   state = {
     data: [],
     open: false,
+    openEdit: false,
     openDelete: false,
     name: '',
     cargo: '',
-    submittedName: '',
+    submittedName: [],
     submittedPhone: '',
     submittedCargo: '',
     phone: '',
-    itemSelected:'',
-    optionsCargo:[]
+    itemSelected: '',
+    optionsCargo: [],
 
   }
 
@@ -43,7 +38,7 @@ export default class ListaContato extends Component {
     this.getCargoFromDb();
     if (!this.state.intervalIsSet) {
       let interval = setInterval(this.getDataFromDb, 1000);
-      this.setState({ intervalIsSet: interval});
+      this.setState({ intervalIsSet: interval });
     }
   }
 
@@ -55,13 +50,13 @@ export default class ListaContato extends Component {
   }
 
   getDataFromDb = () => {
-    fetch("http://localhost:3001/api/getData")
+    fetch(host + "/getData")
       .then(data => data.json())
       .then(res => this.setState({ data: res.data }));
   }
 
   getCargoFromDb = () => {
-    fetch("http://localhost:3001/api/getCargo")
+    fetch(host + "/getCargo")
       .then(cargo => cargo.json())
       .then(res => this.setState({ optionsCargo: res.cargo }));
   }
@@ -70,14 +65,25 @@ export default class ListaContato extends Component {
 
   close = () => this.setState({ open: false, name: '', phone: '', cargo: '' })
 
-  toDelete = () => {
-    !this.state.value ? alert("Selecione um registro para deletar") : this.setState({ dimmer: 'dimmer', openDelete: true })
+  toDelete = (dimmer) => () => {
+    !this.state.value ? alert("Selecione um registro para deletar") : this.setState({ dimmer , openDelete: true })
+  }
+
+  toEdit = (dimmer) => () => {
+    !this.state.value ? alert("Selecione um registro para editar") : (
+      axios.get(host + "/getDataById/" + this.state.value)
+        .then(res => (
+          this.setState({ dimmer, openEdit: true, name: res.data.data.nome, phone: res.data.data.phone, cargo: res.data.data.cargo })
+       ))
+    )
   }
 
   closeDelete = () => this.setState({ openDelete: false })
 
-  handleChangeRadio = (e, {value}) => {
-    this.setState({value})
+  closeEdit = () => this.setState({ openEdit: false, name: '', phone: '', cargo: '' })
+
+  handleChangeRadio = (e, { value }) => {
+    this.setState({ value })
   }
 
   handleChange = (e, { name, value }) => {
@@ -86,7 +92,7 @@ export default class ListaContato extends Component {
 
   handlePutData = () => {
     const { name, phone, cargo } = this.state
-    axios.post("http://localhost:3001/api/putData", {
+    axios.post(host + "/putData", {
       nome: name,
       cargo: cargo,
       phone: phone
@@ -96,7 +102,7 @@ export default class ListaContato extends Component {
   }
 
   handleDeleteData = () => {
-    axios.delete("http://localhost:3001/api/deleteData", {
+    axios.delete(host + "/deleteData", {
       data: {
         id: this.state.value
       }
@@ -115,8 +121,7 @@ export default class ListaContato extends Component {
         phone: phone
       }
     }).then(response => {
-      alert(response.data.error)
-      // response.data.success ? this.closeDelete() : alert(response.data.error)
+      response.data.success ? this.closeEdit() : alert(response.data.error)
     });
   }
 
@@ -124,12 +129,12 @@ export default class ListaContato extends Component {
     const normalized = normalizeInput(value, this.state.phone);
     this.setState({ phone: normalized });
   }
-    
+
   render() {
-    const { open, openDelete, dimmer, data, name, cargo, phone, optionsCargo } = this.state
+    const { open, openEdit, openDelete, dimmer, data, name, cargo, phone, optionsCargo } = this.state
     return (
       <div>
-        <Table >
+        <Table>
           <Table.Header>
             <Table.Row>
               <Table.HeaderCell />
@@ -142,7 +147,7 @@ export default class ListaContato extends Component {
             {data.map(dat => (
               <Table.Row key={dat._id}>
                 <Table.Cell width='1'>
-                <Radio
+                  <Radio
                     name='radioGroup'
                     value={dat._id}
                     checked={this.state.value === dat._id}
@@ -154,6 +159,7 @@ export default class ListaContato extends Component {
                 <Table.Cell>{dat.cargo.map(dc => (dc.text))}</Table.Cell>
               </Table.Row>
             ))}
+
           </Table.Body>
           <Table.Footer fullWidth>
             <Table.Row>
@@ -167,11 +173,11 @@ export default class ListaContato extends Component {
                 >
                   <Icon name='user' /> Novo
                 </Button>
-                <Button size='small' onClick={this.toDelete}>
+                <Button size='small' onClick={this.toEdit('blurring')}>
                   <Icon name='edit' />
                   Editar
                   </Button>
-                <Button size='small' color='red' onClick={this.toDelete}>
+                <Button size='small' color='red' onClick={this.toDelete('blurring')}>
                   <Icon name='remove user' />
                   Deletar
                   </Button>
@@ -179,7 +185,7 @@ export default class ListaContato extends Component {
             </Table.Row>
           </Table.Footer>
         </Table>
-        
+
         {/* ADICIONAR NOVO CONTATO */}
         <Modal dimmer={dimmer} open={open} onClose={this.close}>
           <Modal.Header>Novo Cadastro</Modal.Header>
@@ -220,7 +226,7 @@ export default class ListaContato extends Component {
         </Modal>
 
         {/* EDITAR CONTATO */}
-        {/* <Modal dimmer={dimmer} open={open} onClose={this.close}>
+        <Modal dimmer={dimmer} open={openEdit} onClose={this.closeEdit}>
           <Modal.Header>Editar Cadastro</Modal.Header>
           <Modal.Content>
             <Form success>
@@ -235,7 +241,7 @@ export default class ListaContato extends Component {
                   label='Cargo'
                   value={cargo}
                   onChange={this.handleChange}
-                  options={options}
+                  options={optionsCargo}
                   placeholder='Cargo'
                 />
               </Form.Group>
@@ -243,7 +249,7 @@ export default class ListaContato extends Component {
           </Modal.Content>
           <Modal.Actions>
             <Button.Group>
-              <Button color='red' onClick={this.close}>
+              <Button color='red' onClick={this.closeEdit}>
                 Cancelar
             </Button>
               <Button.Or text='ou' />
@@ -252,11 +258,11 @@ export default class ListaContato extends Component {
                 icon='checkmark'
                 labelPosition='right'
                 content="Salvar"
-                onClick={this.handlePutData}
+                onClick={this.handleUpdateData}
               />
             </Button.Group>
           </Modal.Actions>
-        </Modal> */}
+        </Modal>
 
         {/* DELETAR CONTATO */}
         <Modal size='mini' dimmer={dimmer} open={openDelete} onClose={this.closeDelete}>
@@ -279,7 +285,13 @@ export default class ListaContato extends Component {
           </Modal.Actions>
         </Modal>
         {/* {optionsCargo.map(opt => {opt.text})} */}
+        {/* id:{this.state.value}<br />
+        response: {submittedName.nome}<br />
+        response: {data.map(dat => (dat.nome))} */}
+
+
       </div>
     )
   }
 }
+

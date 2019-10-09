@@ -23,6 +23,7 @@ let db = mongoose.connection;
 const timestamp = new Date();
 db.once('open', () => console.log('Connected to DB - ' + timestamp));
 
+//++++PRINTAR COLLECTIONS+++
 // db.on('open', function () {
 //   db.db.listCollections().toArray(function (err, names) {
 //     if (err) {
@@ -34,6 +35,7 @@ db.once('open', () => console.log('Connected to DB - ' + timestamp));
 //     mongoose.connection.close();
 //   });
 // });
+// ++++++++++++++++++++++++++
 
 // checks if connection with the database is successful
 db.on('error', console.error.bind(console, 'MongoDB connection error:'));
@@ -65,9 +67,10 @@ router.get('/getData', (req, res) => {
   });
 });
 
-router.get('/getDataById', (req, res) => {
-  const { id } = req.body;
-  Data.findById(id, (err, data) => {
+router.get('/getDataById/:id', (req, res) => {
+  const id = req.params.id;
+  console.log("request id: " + id);
+  Data.findById(id, function(err, data) {
     if (err) return res.json({ success: false, error: err });
     return res.json({ success: true, data: data });
   });

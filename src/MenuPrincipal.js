@@ -1,6 +1,5 @@
 import React, { Component } from 'react'
-import { Grid, Menu, Icon, Segment } from 'semantic-ui-react'
-
+import { Grid, Menu, Icon, Segment, Responsive } from 'semantic-ui-react'
 import AuxPorta from './AuxPorta'
 import OrgRJM from './OrgRJM'
 import Porteiros from './Porteiros';
@@ -33,86 +32,82 @@ export default class MenuPrincipal extends Component {
 
     return (
       <Grid columns='2' style={{ padding: '5em 1em' }}>
-        <Grid.Column style={{ width: 225 }}>
-          <Menu vertical >
-            <Menu.Item>
-              <Icon name='calendar alternate outline' />
-              Escalas
+        {/* <Responsive doubling minWidth={768}> */}
+        <Grid.Column>
+          <Segment raised>
+            <Menu vertical >
+              <Menu.Item>
+                <Icon name='calendar alternate outline' />
+                Escalas
               <Menu.Menu>
-                <Menu.Item
-                  name='auxPorta'
-                  active={activeItem === 'auxPorta'}
-                  onClick={this.showAux}
-                >
-                  Auxiliares da Porta
+                  <Menu.Item
+                    name='auxPorta'
+                    active={activeItem === 'auxPorta'}
+                    onClick={this.showAux}
+                  >
+                    Auxiliares da Porta
             </Menu.Item>
-                <Menu.Item
-                  name='orgRjm'
-                  active={activeItem === 'orgRjm'}
-                  onClick={this.showRJM}
-                >
-                  Organistas da Reunião de Jovens e Menores
+                  <Menu.Item
+                    name='orgRjm'
+                    active={activeItem === 'orgRjm'}
+                    onClick={this.showRJM}
+                  >
+                    Organistas da Reunião de Jovens e Menores
             </Menu.Item>
-                <Menu.Item
-                  name='orgOficial'
-                  active={activeItem === 'orgOficial'}
-                  onClick={this.showAux}
-                >
-                  Organistas do Culto Oficial
+                  <Menu.Item
+                    name='orgOficial'
+                    active={activeItem === 'orgOficial'}
+                    onClick={this.showAux}
+                  >
+                    Organistas do Culto Oficial
             </Menu.Item>
-                <Menu.Item
-                  name='porteiros'
-                  active={activeItem === 'porteiros'}
-                  onClick={this.showPorteiros}
-                >
-                  Porteiros
+                  <Menu.Item
+                    name='porteiros'
+                    active={activeItem === 'porteiros'}
+                    onClick={this.showPorteiros}
+                  >
+                    Porteiros
                 </Menu.Item>
-              </Menu.Menu>
+                </Menu.Menu>
+              </Menu.Item>
+              <Menu.Item
+                name='contatos'
+                active={activeItem === 'contatos'}
+                onClick={this.showContatos}
+              >
+                <Icon name='address book outline' />
+                Contatos
             </Menu.Item>
-            <Menu.Item
-              name='contatos'
-              active={activeItem === 'contatos'}
-              onClick={this.showContatos}
-            >
-              <Icon name='address book outline' />
-              Contatos
-            </Menu.Item>
-
-          </Menu>
+            </Menu>
+          </Segment>
         </Grid.Column>
-        {this.state.showMeAuxPorta ?
-          <Grid.Column width={12}>
+
+        <Grid.Column >
+          {this.state.showMeAuxPorta ?
             <Segment raised>
               <AuxPorta />
             </Segment>
-          </Grid.Column>
-          : null
-        }
-        {this.state.showMeRJM ?
-          <Grid.Column width={12} >
+            : null
+          }
+          {this.state.showMeRJM ?
             <Segment raised>
               <OrgRJM />
             </Segment>
-          </Grid.Column>
-          : null
-        }
-        {this.state.showMePorteiros ?
-          <Grid.Column width={12} >
+            : null
+          }
+          {this.state.showMePorteiros ?
             <Segment raised>
               <Porteiros />
             </Segment>
-          </Grid.Column>
-          : null
-        }
-
-        {this.state.showMeContatos ?
-          <Grid.Column width={12} >
+            : null
+          }
+          {this.state.showMeContatos ?
             <Segment raised>
               <ListaContato />
             </Segment>
-          </Grid.Column>
-          : null
-        }
+            : null
+          }
+        </Grid.Column>
       </Grid>
     )
   }

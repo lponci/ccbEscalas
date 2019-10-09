@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import "./App.css";
 import { Divider, Grid, Table } from 'semantic-ui-react'
 import { Header } from 'semantic-ui-react'
 

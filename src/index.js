@@ -40,7 +40,7 @@ const FixedMenuLayout = () => (
 
     <MenuPrincipal />
 
-    <Segment bottom inverted vertical style={{ padding: '4em 0em' }}>
+    <Segment inverted vertical>
       <Container textAlign='center'>
       {<Image centered size='mini' src='https://cdn0.iconfinder.com/data/icons/economico-a-business-icon-set/74/calendar-calender-timetable-512.png'  />
         /* <Image centered size='mini' src='/logo.png' /> */}

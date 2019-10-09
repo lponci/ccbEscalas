@@ -3,3 +3,10 @@ body {
   padding: 0px;
   font-family: sans-serif;
 }
+
+.ui.vertical.segment { /* Increased specificity for SO snippet priority */
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  padding: '2em 0em';
+}
