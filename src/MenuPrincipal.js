@@ -31,11 +31,12 @@ export default class MenuPrincipal extends Component {
     const { activeItem } = this.state
 
     return (
+      <div>
       <Grid columns='2' style={{ padding: '5em 1em' }}>
-        {/* <Responsive doubling minWidth={768}> */}
-        <Grid.Column>
+        {/* <Responsive minWidth={768}> */}
+        <Grid.Column computer={3}>
           <Segment raised>
-            <Menu vertical >
+            <Menu fluid vertical >
               <Menu.Item>
                 <Icon name='calendar alternate outline' />
                 Escalas
@@ -81,13 +82,14 @@ export default class MenuPrincipal extends Component {
             </Menu>
           </Segment>
         </Grid.Column>
+        {/* </Responsive> */}
 
-        <Grid.Column >
+        <Grid.Column mobile={16} computer={10} >
           {this.state.showMeAuxPorta ?
             <Segment raised>
               <AuxPorta />
             </Segment>
-            : null
+             : null 
           }
           {this.state.showMeRJM ?
             <Segment raised>
@@ -109,6 +111,7 @@ export default class MenuPrincipal extends Component {
           }
         </Grid.Column>
       </Grid>
+      </div>
     )
   }
 }

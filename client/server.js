@@ -5,6 +5,7 @@ const bodyParser = require('body-parser');
 const logger = require('morgan');
 const Data = require('./data');
 const Cargo = require('./cargo');
+const DataOrgRJM = require('./dataOrgRJM');
 
 const API_PORT = 3001;
 const app = express();
@@ -164,6 +165,50 @@ router.delete('/deleteCargo', (req, res) => {
     return res.json({ success: true });
   });
 });
+
+//+++++++++++++++++++++DATA OrgRJM+++++++++++++++++++++++++++++++
+
+router.get('/getDataOrgRJM', (req, res) => {
+  DataOrgRJM.find((err, dataOrgRJM) => {
+    if (err) return res.json({ success: false, error: err });
+    return res.json({ success: true, dataOrgRJM: dataOrgRJM });
+  });
+});
+
+router.post('/putDataOrgRJM', (req, res) => {
+  let dataOrgRJM = new DataOrgRJM();
+
+  const { mes, dia, diaSemana, nome } = req.body;
+
+  if (!mes || !dia || !diaSemana || !nome) {
+    return res.json({
+      success: false,
+      error: 'INVALID INPUTS',
+      body: req.body
+    });
+  }
+  dataOrgRJM.mes = mes;
+  dataOrgRJM.dia = dia;
+  dataOrgRJM.diaSemana = diaSemana;
+  dataOrgRJM.nome = nome;
+  dataOrgRJM.save((err) => {
+    if (err) return res.json({ success: false, error: err });
+    return res.json({ success: true });
+  });
+});
+
+router.post('/updateDataOrgRJM', (req, res) => {
+  const { id, update } = req.body;
+  Cargo.findByIdAndUpdate(id, update, (err) => {
+    if (err) return res.json({ success: false, error: err });
+    return res.json({ success: true });
+  });
+});
+
+router.delete('/deleteAllDataOrgRJM', (req, res) => {
+  Cargo.remove({});
+});
+//+++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 // append /api for our http requests
 app.use('/api', router);

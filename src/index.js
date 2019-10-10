@@ -37,13 +37,11 @@ const FixedMenuLayout = () => (
         </Dropdown>
       </Container>
     </Menu>
-
     <MenuPrincipal />
 
     <Segment inverted vertical>
       <Container textAlign='center'>
-      {<Image centered size='mini' src='https://cdn0.iconfinder.com/data/icons/economico-a-business-icon-set/74/calendar-calender-timetable-512.png'  />
-        /* <Image centered size='mini' src='/logo.png' /> */}
+      {/* <Image centered size='mini' src='https://cdn0.iconfinder.com/data/icons/economico-a-business-icon-set/74/calendar-calender-timetable-512.png'/> */}
         <List horizontal inverted divided link size='small'>
           <List.Item as='a' href='#'>
             @Ponci

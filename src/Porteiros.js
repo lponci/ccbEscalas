@@ -34,8 +34,8 @@ function createCells(now) {
     if (d.getDay() === 1 || d.getDay() === 4) {
       daysOfYear.push(
         <Table.Row>
-          <Table.Cell width='4' textAlign="center">{d.getDate()}</Table.Cell>
-          <Table.Cell width='4' textAlign="center">{diaSemana(d)}</Table.Cell>
+          <Table.Cell  textAlign="center">{d.getDate()}</Table.Cell>
+          <Table.Cell  textAlign="center">{diaSemana(d)}</Table.Cell>
           <Table.Cell textAlign="center">Joao</Table.Cell>
           <Table.Cell textAlign="center">Paulo</Table.Cell>
         </Table.Row>
@@ -45,8 +45,8 @@ function createCells(now) {
     if (d.getDay() === 0) {
       daysOfYear.push(
         <Table.Row>
-          <Table.Cell width='4' negative textAlign="center">{d.getDate()}</Table.Cell>
-          <Table.Cell width='4' negative textAlign="center">{diaSemana(d)}</Table.Cell>
+          <Table.Cell  negative textAlign="center">{d.getDate()}</Table.Cell>
+          <Table.Cell negative textAlign="center">{diaSemana(d)}</Table.Cell>
           <Table.Cell textAlign="center">Joao</Table.Cell>
           <Table.Cell textAlign="center">Paulo</Table.Cell>
         </Table.Row>
@@ -61,32 +61,40 @@ export default class Porteiros extends Component {
   render() {
 
     return (
-      <Grid>{
-        this.state.map(data => (
-          <Grid.Column width='4'>
-            <React.Fragment>
-              <Divider horizontal>
-                <Header as='h4'>
-                  {getNomeMes(data)}
-                </Header>
-              </Divider>
-            </React.Fragment>
+      <div>
+      <Grid columns='4'>
+      
+        {this.state.map(data => (
+          <Grid.Column >
+          
+          <React.Fragment>
+            <Divider horizontal>
+              <Header as='h4'>
+                {getNomeMes(data)}
+              </Header>
+            </Divider>
+          </React.Fragment>
 
-            <Table celled compact >
-              <Table.Header>
-                <Table.Row>
-                  <Table.HeaderCell colSpan={2} textAlign="center">Data</Table.HeaderCell>
-                  <Table.HeaderCell colSpan={2} textAlign="center">Irmãos</Table.HeaderCell>
-                </Table.Row>
-              </Table.Header>
-              <Table.Body>
-                {createCells(data)}
-              </Table.Body>
-            </Table>
-          </Grid.Column>
-        ))
-      }
+          <Table celled compact >
+            <Table.Header fullWidth>
+              <Table.Row>
+                <Table.HeaderCell colSpan={2} textAlign="center">Data</Table.HeaderCell>
+                <Table.HeaderCell colSpan={2} textAlign="center">Irmãos</Table.HeaderCell>
+              </Table.Row>
+            </Table.Header>
+            <Table.Body>
+              {createCells(data)}
+            </Table.Body>
+          </Table>
+          
+           </Grid.Column>
+        )
+        )
+        }
+        
+      
       </Grid>
+      </div>
     )
   }
 }
