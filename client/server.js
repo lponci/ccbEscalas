@@ -51,33 +51,53 @@ app.use(logger('dev'));
 
 // this is our get method
 // this method fetches all available data in our database
-router.get('/getData', (req, res) => {
+router.get('/getContato', (req, res) => {
   Data.aggregate([
-    { $lookup:
-       {
-         from: 'cargos',
-         localField: 'cargo',
-         foreignField: 'value',
-         as: 'cargo'
-       }
-     },
-     {
-      $match:{
-          $and:[{"value" : "rjm"}]
+    {
+      $lookup:
+      {
+        from: 'cargos',
+        localField: 'cargo',
+        foreignField: 'value',
+        as: 'cargo'
       }
-  },
-
-    ])
-  .exec(function(err, data) {
-    if (err) return res.json({ success: false, error: err });
-    return res.json({ success: true, data: data });
-  });
+    }
+  ])
+    .exec(function (err, data) {
+      if (err) return res.json({ success: false, error: err });
+      return res.json({ success: true, data: data });
+    });
 });
 
-router.get('/getDataById/:id', (req, res) => {
+router.get('/getNomeContatoByCargo/:cargoValue', (req, res) => {
+  const cargoValue = req.params.cargoValue;
+  Data.aggregate([
+    {
+      $lookup:
+      {
+        from: 'cargos',
+        localField: 'cargo',
+        foreignField: 'value',
+        as: 'cargo'
+      }
+    },
+    {
+      $match: {
+        "cargo.value": cargoValue
+      }
+    },
+    {$project:{_id:0, nome:1}}
+  ])
+    .exec(function (err, data) {
+      if (err) return res.json({ success: false, error: err });
+      return res.json({ success: true, data: data });
+    });
+});
+
+router.get('/getContatoById/:id', (req, res) => {
   const id = req.params.id;
   console.log("request id: " + id);
-  Data.findById(id, function(err, data) {
+  Data.findById(id, function (err, data) {
     if (err) return res.json({ success: false, error: err });
     return res.json({ success: true, data: data });
   });
@@ -85,7 +105,7 @@ router.get('/getDataById/:id', (req, res) => {
 
 // this is our update method
 // this method overwrites existing data in our database
-router.post('/updateData', (req, res) => {
+router.post('/updateContato', (req, res) => {
   const { id, update } = req.body;
   Data.findByIdAndUpdate(id, update, (err) => {
     if (err) return res.json({ success: false, error: err });
@@ -95,7 +115,7 @@ router.post('/updateData', (req, res) => {
 
 // this is our delete method
 // this method removes existing data in our database
-router.delete('/deleteData', (req, res) => {
+router.delete('/deleteContato', (req, res) => {
   const { id } = req.body;
   Data.findByIdAndRemove(id, (err) => {
     if (err) return res.send(err);
@@ -105,7 +125,7 @@ router.delete('/deleteData', (req, res) => {
 
 // this is our create methid
 // this method adds new data in our database
-router.post('/putData', (req, res) => {
+router.post('/putContato', (req, res) => {
   let data = new Data();
 
   const { nome, cargo, phone } = req.body;

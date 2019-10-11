@@ -50,7 +50,7 @@ export default class ListaContato extends Component {
   }
 
   getDataFromDb = () => {
-    fetch(host + "/getData")
+    fetch(host + "/getContato")
       .then(data => data.json())
       .then(res => this.setState({ data: res.data }));
   }
@@ -66,15 +66,21 @@ export default class ListaContato extends Component {
   close = () => this.setState({ open: false, name: '', phone: '', cargo: '' })
 
   toDelete = (dimmer) => () => {
-    !this.state.value ? alert("Selecione um registro para deletar") : this.setState({ dimmer , openDelete: true })
+    !this.state.value ? alert("Selecione um registro para deletar") : this.setState({ dimmer, openDelete: true })
   }
 
   toEdit = (dimmer) => () => {
     !this.state.value ? alert("Selecione um registro para editar") : (
-      axios.get(host + "/getDataById/" + this.state.value)
+      axios.get(host + "/getContatoById/" + this.state.value)
         .then(res => (
-          this.setState({ dimmer, openEdit: true, name: res.data.data.nome, phone: res.data.data.phone, cargo: res.data.data.cargo })
-       ))
+          this.setState({
+            dimmer,
+            openEdit: true,
+            name: res.data.data.nome,
+            phone: res.data.data.phone,
+            cargo: res.data.data.cargo
+          })
+        ))
     )
   }
 
@@ -92,7 +98,7 @@ export default class ListaContato extends Component {
 
   handlePutData = () => {
     const { name, phone, cargo } = this.state
-    axios.post(host + "/putData", {
+    axios.post(host + "/putContato", {
       nome: name,
       cargo: cargo,
       phone: phone
@@ -102,7 +108,7 @@ export default class ListaContato extends Component {
   }
 
   handleDeleteData = () => {
-    axios.delete(host + "/deleteData", {
+    axios.delete(host + "/deleteContato", {
       data: {
         id: this.state.value
       }
@@ -113,7 +119,7 @@ export default class ListaContato extends Component {
 
   handleUpdateData = () => {
     const { name, phone, cargo } = this.state
-    axios.post("http://localhost:3001/api/updateData", {
+    axios.post(host + "/updateContato", {
       id: this.state.value,
       update: {
         nome: name,

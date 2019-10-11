@@ -1,74 +1,90 @@
 import React, { Component } from 'react';
-import { Header, Button, Icon, Divider, Grid, Table } from 'semantic-ui-react'
+import { Header, Button, Form, Divider, Grid, Table } from 'semantic-ui-react'
 import { axios } from 'axios'
 
 const nomes = ["Jessica", "Nayra", "Ana", "Rute"];
 
-function fillMonths(qtMonths) {
-  const datas = [];
-  const mesAtual = new Date();
-  for (var i = 0; i < qtMonths; i++) {
-    datas.push(new Date(mesAtual.getFullYear(), mesAtual.getMonth() + i, 1));
-  }
-  return datas;
-};
 
-function getNomeMes(dt) {
-  return dt.toLocaleString(navigator.language, { month: 'long' });
-};
-
-function diaSemana(dt) {
-  return dt.toLocaleString(navigator.language, { weekday: 'narrow' });
-};
-
-function getNome(index) {
-  return nomes[index];
-};
-
-function createCells(now) {
-  var index = 0;
-  const daysOfYear = [];
-  var dtInicio = new Date(now.getFullYear(), now.getMonth(), 1);
-  var dtFim = new Date(now.getFullYear(), now.getMonth() + 1, 0);
-  for (var d = dtInicio; d <= dtFim; d.setDate(d.getDate() + 1)) {
-    if (d.getDay() === 0) {
-      daysOfYear.push(
-        <Table.Row>
-          <Table.Cell width='4' negative textAlign="center">{d.getDate()}</Table.Cell>
-          <Table.Cell width='4' negative textAlign="center">{diaSemana(d)}</Table.Cell>
-          <Table.Cell textAlign="center">{getNome(index)}</Table.Cell>
-        </Table.Row>
-      );
-    }
-    index++
-    if (index >= nomes.length) {
-      index = 0;
-    }
-  }
-
-  return daysOfYear;
-};
 
 const host = 'http://localhost:3001/api'
 
 export default class OrgRJM extends Component {
   state = {
     data: [],
-    mesesTabela: fillMonths(8)
+    cargo: '',
+    optionsCargo: [],
+    mesesTabela: []
   }
 
-  handleButton = () => {
-      this.getDataFromDb()
+  componentDidMount() {
+    this.getCargoFromDb()
+    this.fillMonths(8);
   }
 
-  getDataFromDb = () => {
-    fetch(host + "/getData")
+  fillMonths = (qtMonths) => {
+    const datas = [];
+    const mesAtual = new Date();
+    for (var i = 0; i < qtMonths; i++) {
+      datas.push(new Date(mesAtual.getFullYear(), mesAtual.getMonth() + i, 1));
+    }
+    this.setState({ mesesTabela: datas });
+  };
+
+  handleButton = (cargoValue) => () => {
+    if (!cargoValue) {
+      alert("Cargo obrigatorio")
+      return
+    }
+    fetch(host + "/getNomeContatoByCargo/" + cargoValue)
+      .then(data => data.json())
+      .then(res => {
+        const mesAtual = new Date();
+        for (var i = 0; i < 2; i++) {
+          var dtInicio = new Date(mesAtual.getFullYear(), mesAtual.getMonth() + i, 1);
+          var nomeMes = dtInicio.toLocaleString(navigator.language, { month: 'long' });
+          var dtFim = new Date(dtInicio.getFullYear(), dtInicio.getMonth() + 1, 0);
+          var j = 0
+          for (var d = dtInicio; d <= dtFim; d.setDate(d.getDate() + 1)) {
+            if (d.getDay() === 0) {
+              const diaSemana = d.toLocaleString(navigator.language, { weekday: 'narrow' });
+
+              axios.post(host + "/putDataOrgRJM", {
+                mes: nomeMes,
+                dia: d.getDate(),
+                diaSemana: diaSemana,
+                nome: res.data[j].nome
+              }).then(response => {
+                response.data.success ? alert("Tabela preenchida com sucesso!") : alert(response.data.error)
+              });
+
+              j++;
+              if (j >= res.data.size) {
+                j = 0;
+              }
+            }
+          }
+        }
+      });
+  }
+
+  getNomeContatoFromDb = (cargoValue) => () => {
+    fetch(host + "/getNomeContatoByCargo/" + cargoValue)
       .then(data => data.json())
       .then(res => this.setState({ data: res.data }));
   }
 
+  getCargoFromDb = () => {
+    fetch(host + "/getCargo")
+      .then(cargo => cargo.json())
+      .then(res => this.setState({ optionsCargo: res.cargo }));
+  }
+
+  handleChange = (e, { name, value }) => {
+    this.setState({ [name]: value })
+  }
+
   render() {
-    const { mesesTabela, data} = this.state
+    const { mesesTabela, data, cargo, optionsCargo } = this.state
     return (
       <div>
         <React.Fragment>
@@ -78,19 +94,30 @@ export default class OrgRJM extends Component {
            </Header>
           </Divider>
         </React.Fragment>
-        <Button size='small' onClick={this.handleButton}>Aux Porta</Button>
-        <Button size='small'>Org RJM</Button>
-        <Button size='small' >Org Oficial</Button>
-        <Button size='small'>Porteiros</Button>
-        <br/>
-        {data.map(dt=>(dt.nome))}
+        <Form>
+          <Form.Group>
+            <Form.Select
+              clearable
+              required
+              fluid
+              name='cargo'
+              // label='Cargo'
+              value={cargo}
+              onChange={this.handleChange}
+              options={optionsCargo}
+              placeholder='Cargo'
+            />
+            <Form.Button size='small' onClick={this.handleButton(cargo)}>Popular</Form.Button>
+          </Form.Group>
+        </Form>
+        <br />
+        {data.map(dt => (dt.nome))}
         <Grid>
           {mesesTabela.map(data => (
             <Grid.Column width='4'>
               <React.Fragment>
                 <Divider horizontal>
                   <Header as='h4'>
-                    {getNomeMes(data)}
                   </Header>
                 </Divider>
               </React.Fragment>
@@ -103,7 +130,6 @@ export default class OrgRJM extends Component {
                   </Table.Row>
                 </Table.Header>
                 <Table.Body>
-                  {createCells(data)}
                 </Table.Body>
               </Table>
             </Grid.Column>
