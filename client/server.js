@@ -60,7 +60,13 @@ router.get('/getData', (req, res) => {
          foreignField: 'value',
          as: 'cargo'
        }
-     }
+     },
+     {
+      $match:{
+          $and:[{"value" : "rjm"}]
+      }
+  },
+
     ])
   .exec(function(err, data) {
     if (err) return res.json({ success: false, error: err });
