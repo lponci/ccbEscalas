@@ -11,6 +11,7 @@ const host = 'http://localhost:3001/api'
 export default class OrgRJM extends Component {
   state = {
     data: [],
+    dataOrgRJM: [],
     cargo: '',
     optionsCargo: [],
     mesesTabela: []
@@ -30,11 +31,17 @@ export default class OrgRJM extends Component {
     this.setState({ mesesTabela: datas });
   };
 
+  handleButton2 = () => {
+    this.getDataOrgRJMFromDb()
+  }
+
   handleButton = (cargoValue) => () => {
     if (!cargoValue) {
       alert("Cargo obrigatorio")
       return
     }
+    axios.delete(host + "/deleteAllDataOrgRJM")
+
     fetch(host + "/getNomeContatoByCargo/" + cargoValue)
       .then(data => data.json())
       .then(res => {
@@ -48,12 +55,17 @@ export default class OrgRJM extends Component {
             if (d.getDay() === 0) {
               const diaSemana = d.toLocaleString(navigator.language, { weekday: 'narrow' });
 
-              axios.post(host + "/putDataOrgRJM", {
-                mes: nomeMes,
-                dia: d.getDate(),
-                diaSemana: diaSemana,
-                nome: res.data[j].nome
+              fetch(host + "/putDataOrgRJM", {
+                method: "POST",
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                  "mes": nomeMes,
+                  "dia": d.getDate(),
+                  "diaSemana": diaSemana,
+                  "nome": res.data[j].nome
+                }),
               }).then(response => {
+                console.log(response)
                 response.data.success ? alert("Tabela preenchida com sucesso!") : alert(response.data.error)
               });
 
@@ -64,6 +76,15 @@ export default class OrgRJM extends Component {
             }
           }
         }
+      });
+  }
+
+  getDataOrgRJMFromDb = () => {
+    fetch(host + "/getDataOrgRJM")
+      .then(dataOrgRJM => dataOrgRJM.json())
+      .then(res => {
+        console.log(res.dataOrgRJM)
+        this.setState({ dataOrgRJM: res.dataOrgRJM })
       });
   }
 
@@ -84,7 +105,7 @@ export default class OrgRJM extends Component {
   }
 
   render() {
-    const { mesesTabela, data, cargo, optionsCargo } = this.state
+    const { mesesTabela, data, dataOrgRJM, cargo, optionsCargo } = this.state
     return (
       <div>
         <React.Fragment>
@@ -110,31 +131,35 @@ export default class OrgRJM extends Component {
             <Form.Button size='small' onClick={this.handleButton(cargo)}>Popular</Form.Button>
           </Form.Group>
         </Form>
+        <Button size='small' onClick={this.handleButton2}>getTabela</Button>
         <br />
         {data.map(dt => (dt.nome))}
         <Grid>
-          {mesesTabela.map(data => (
-            <Grid.Column width='4'>
-              <React.Fragment>
-                <Divider horizontal>
-                  <Header as='h4'>
-                  </Header>
-                </Divider>
-              </React.Fragment>
-
-              <Table celled compact >
-                <Table.Header>
-                  <Table.Row>
-                    <Table.HeaderCell colSpan={2} textAlign="center">Data</Table.HeaderCell>
-                    <Table.HeaderCell textAlign="center">Irmãs</Table.HeaderCell>
+          <Grid.Column width='4'>
+            <React.Fragment>
+              <Divider horizontal>
+                <Header as='h4'>
+                </Header>
+              </Divider>
+            </React.Fragment>
+            <Table celled compact >
+              <Table.Header>
+                <Table.Row>
+                  <Table.HeaderCell colSpan={2} textAlign="center">Data</Table.HeaderCell>
+                  <Table.HeaderCell textAlign="center">Irmãs</Table.HeaderCell>
+                </Table.Row>
+              </Table.Header>
+              <Table.Body>
+                {dataOrgRJM.map(dtRJM => (
+                  <Table.Row key={dtRJM._id}>
+                    <Table.Cell width='4' negative textAlign="center">{dtRJM.dia}</Table.Cell>
+                    <Table.Cell width='4' negative textAlign="center">{dtRJM.diaSemana}</Table.Cell>
+                    <Table.Cell textAlign="center">{dtRJM.nome}</Table.Cell>
                   </Table.Row>
-                </Table.Header>
-                <Table.Body>
-                </Table.Body>
-              </Table>
-            </Grid.Column>
-          ))
-          }
+                ))}
+              </Table.Body>
+            </Table>
+          </Grid.Column>
         </Grid>
       </div>
     )

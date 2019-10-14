@@ -232,7 +232,13 @@ router.post('/updateDataOrgRJM', (req, res) => {
 });
 
 router.delete('/deleteAllDataOrgRJM', (req, res) => {
-  Cargo.remove({});
+  DataOrgRJM.deleteMany(function(err){
+    if(err){ 
+        throw err;
+    } else{
+        console.log('Collection DataOrgRJM deleted.');
+    }
+});
 });
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
