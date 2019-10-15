@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Grid, Menu, Icon, Segment, Responsive } from 'semantic-ui-react'
+import { Grid, Menu, Icon, Segment } from 'semantic-ui-react'
 import AuxPorta from './AuxPorta'
 import OrgRJM from './OrgRJM'
 import Porteiros from './Porteiros';

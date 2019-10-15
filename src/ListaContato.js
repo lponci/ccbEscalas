@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Button, Icon, Table, Modal, Radio, Form, Segment, Responsive } from 'semantic-ui-react'
+import { Button, Icon, Table, Modal, Radio, Form } from 'semantic-ui-react'
 import axios from 'axios'
 
 const host = 'http://localhost:3001/api'

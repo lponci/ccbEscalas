@@ -86,7 +86,7 @@ router.get('/getNomeContatoByCargo/:cargoValue', (req, res) => {
         "cargo.value": cargoValue
       }
     },
-    {$project:{_id:0, nome:1}}
+    { $project: { _id: 0, nome: 1 } }
   ])
     .exec(function (err, data) {
       if (err) return res.json({ success: false, error: err });
@@ -195,10 +195,12 @@ router.delete('/deleteCargo', (req, res) => {
 //+++++++++++++++++++++DATA OrgRJM+++++++++++++++++++++++++++++++
 
 router.get('/getDataOrgRJM', (req, res) => {
-  DataOrgRJM.find((err, dataOrgRJM) => {
+  DataOrgRJM.aggregate([
+    { $group: { _id: "$mes", books: { $push: "$$ROOT" } } }
+  ]).exec(function (err, dataOrgRJM) {
     if (err) return res.json({ success: false, error: err });
     return res.json({ success: true, dataOrgRJM: dataOrgRJM });
-  });
+  })
 });
 
 router.post('/putDataOrgRJM', (req, res) => {
@@ -225,20 +227,20 @@ router.post('/putDataOrgRJM', (req, res) => {
 
 router.post('/updateDataOrgRJM', (req, res) => {
   const { id, update } = req.body;
-  Cargo.findByIdAndUpdate(id, update, (err) => {
+  DataOrgRJM.findByIdAndUpdate(id, update, (err) => {
     if (err) return res.json({ success: false, error: err });
     return res.json({ success: true });
   });
 });
 
 router.delete('/deleteAllDataOrgRJM', (req, res) => {
-  DataOrgRJM.deleteMany(function(err){
-    if(err){ 
-        throw err;
-    } else{
-        console.log('Collection DataOrgRJM deleted.');
+  DataOrgRJM.deleteMany(function (err) {
+    if (err) {
+      throw err;
+    } else {
+      console.log('Collection DataOrgRJM deleted.');
     }
-});
+  });
 });
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++
 

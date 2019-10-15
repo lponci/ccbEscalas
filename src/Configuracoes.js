@@ -1,10 +1,6 @@
 import React, { Component } from 'react';
 import { Header, Button, Form, Divider, Grid, Table } from 'semantic-ui-react'
-import { axios } from 'axios'
-
-const nomes = ["Jessica", "Nayra", "Ana", "Rute"];
-
-
+import axios from 'axios'
 
 const host = 'http://localhost:3001/api'
 
@@ -13,23 +9,12 @@ export default class OrgRJM extends Component {
     data: [],
     dataOrgRJM: [],
     cargo: '',
-    optionsCargo: [],
-    mesesTabela: []
+    optionsCargo: []
   }
 
   componentDidMount() {
     this.getCargoFromDb()
-    this.fillMonths(8);
   }
-
-  fillMonths = (qtMonths) => {
-    const datas = [];
-    const mesAtual = new Date();
-    for (var i = 0; i < qtMonths; i++) {
-      datas.push(new Date(mesAtual.getFullYear(), mesAtual.getMonth() + i, 1));
-    }
-    this.setState({ mesesTabela: datas });
-  };
 
   handleButton2 = () => {
     this.getDataOrgRJMFromDb()
@@ -40,7 +25,8 @@ export default class OrgRJM extends Component {
       alert("Cargo obrigatorio")
       return
     }
-    axios.delete(host + "/deleteAllDataOrgRJM")
+
+    this.deleteAllDataOrgRJMFromDb()
 
     fetch(host + "/getNomeContatoByCargo/" + cargoValue)
       .then(data => data.json())
@@ -64,11 +50,7 @@ export default class OrgRJM extends Component {
                   "diaSemana": diaSemana,
                   "nome": res.data[j].nome
                 }),
-              }).then(response => {
-                console.log(response)
-                response.data.success ? alert("Tabela preenchida com sucesso!") : alert(response.data.error)
-              });
-
+              })
               j++;
               if (j >= res.data.size) {
                 j = 0;
@@ -76,6 +58,7 @@ export default class OrgRJM extends Component {
             }
           }
         }
+        alert("Tabela preenchida com sucesso!")
       });
   }
 
@@ -88,16 +71,17 @@ export default class OrgRJM extends Component {
       });
   }
 
-  getNomeContatoFromDb = (cargoValue) => () => {
-    fetch(host + "/getNomeContatoByCargo/" + cargoValue)
-      .then(data => data.json())
-      .then(res => this.setState({ data: res.data }));
-  }
-
   getCargoFromDb = () => {
     fetch(host + "/getCargo")
       .then(cargo => cargo.json())
       .then(res => this.setState({ optionsCargo: res.cargo }));
+  }
+
+  deleteAllDataOrgRJMFromDb = () => {
+    axios.delete(host + "/deleteAllDataOrgRJM").then(res => {
+      console.log(res);
+      console.log(res.data)
+    });
   }
 
   handleChange = (e, { name, value }) => {
@@ -105,7 +89,7 @@ export default class OrgRJM extends Component {
   }
 
   render() {
-    const { mesesTabela, data, dataOrgRJM, cargo, optionsCargo } = this.state
+    const { data, dataOrgRJM, cargo, optionsCargo } = this.state
     return (
       <div>
         <React.Fragment>
