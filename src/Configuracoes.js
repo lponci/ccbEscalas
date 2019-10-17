@@ -1,14 +1,12 @@
 import React, { Component } from 'react';
-import { Header, Button, Form, Divider, Grid, Table } from 'semantic-ui-react'
+import { Header, Button, Form, Divider, Grid, Table, Container } from 'semantic-ui-react'
 import axios from 'axios'
-import ReactNotifications from 'react-notifications-component';
 import { store } from 'react-notifications-component';
-import 'react-notifications-component/dist/theme.css';
-import 'animate.css';
+import Notificacoes from './Notificacoes'
 
 const host = 'http://localhost:3001/api'
 
-export default class OrgRJM extends Component {
+export default class Configuracoes extends Component {
   state = {
     dataOrgRJM: [],
     cargo: '',
@@ -25,18 +23,21 @@ export default class OrgRJM extends Component {
 
   handleButton = (cargoValue) => () => {
     if (!cargoValue) {
-      store.addNotification({
-        title: "Atenção!",
-        message: "Um Cargo deve ser selecionado.",
-        type: "info",
-        insert: "top",
-        container: "bottom-center",
-        animationIn: ["animated", "fadeIn"],
-        animationOut: ["animated", "fadeOut"],
-        dismiss: {
-          duration: 3000,
-        }
-      });
+      
+      <Notificacoes type='alerta' msg='Um Cargo deve ser selecionado.' />
+      console.log('depois')
+      // store.addNotification({
+      //   title: "Atenção!",
+      //   message: "Um Cargo deve ser selecionado.",
+      //   type: "warning",
+      //   insert: "top",
+      //   container: "top-right",
+      //   animationIn: ["animated", "fadeIn"],
+      //   animationOut: ["animated", "fadeOut"],
+      //   dismiss: {
+      //     duration: 3000,
+      //   }
+      // });
       return
     }
 
@@ -118,7 +119,6 @@ export default class OrgRJM extends Component {
     const { dataOrgRJM, cargo, optionsCargo } = this.state
     return (
       <div>
-        <ReactNotifications />
         <React.Fragment>
           <Divider horizontal>
             <Header as='h4'>
@@ -130,7 +130,6 @@ export default class OrgRJM extends Component {
           <Form.Group>
             <Form.Select
               clearable
-              required
               fluid
               name='cargo'
               // label='Cargo'
@@ -139,11 +138,12 @@ export default class OrgRJM extends Component {
               options={optionsCargo}
               placeholder='Cargo'
             />
-            <Form.Button size='small' onClick={this.handleButton(cargo)}>Popular</Form.Button>
+            <Form.Button onClick={this.handleButton(cargo)}>Popular</Form.Button>
           </Form.Group>
-          <Button size='small' onClick={this.handleButton2}>getTabela</Button>
         </Form>
+        <Button size='small' onClick={this.handleButton2}>getTabela</Button>
         <Grid>
+
           {dataOrgRJM.map(dtRJM => (
             <Grid.Column key={dtRJM._id} width='4'>
               <React.Fragment>

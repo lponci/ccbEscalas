@@ -2,6 +2,10 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import React from 'react'
 import MenuPrincipal from './MenuPrincipal'
+import ReactNotifications from 'react-notifications-component';
+import 'react-notifications-component/dist/theme.css';
+import 'animate.css';
+
 import {
   Container,
   Dropdown,
@@ -13,8 +17,9 @@ import {
 
 const FixedMenuLayout = () => (
   <div>
-    <Menu fixed='top' inverted>
-      <Container>
+  <ReactNotifications />
+    {/* <Menu fixed='top' inverted>
+       <Container>
         <Menu.Item as='a' header>
           <Image size='mini' src='https://cdn0.iconfinder.com/data/icons/economico-a-business-icon-set/74/calendar-calender-timetable-512.png' style={{ marginRight: '1.5em' }} />
           Escalas
@@ -36,7 +41,7 @@ const FixedMenuLayout = () => (
           </Dropdown.Menu>
         </Dropdown>
       </Container>
-    </Menu>
+    </Menu> */}
     <MenuPrincipal />
 
     <Segment inverted vertical>

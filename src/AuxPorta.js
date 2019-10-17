@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Divider, Grid, Table } from 'semantic-ui-react'
+import { Divider, Grid, Table, Responsive } from 'semantic-ui-react'
 import { Header } from 'semantic-ui-react'
 
 const meses = ["Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho",
@@ -33,8 +33,8 @@ function createCells(now) {
     if (d.getDay() === 1 || d.getDay() === 4) {
       daysOfYear.push(
         <Table.Row>
-          <Table.Cell width='4' textAlign="center">{d.getDate()}</Table.Cell>
-          <Table.Cell width='4' textAlign="center">{diaSemana(d)}</Table.Cell>
+          <Table.Cell textAlign="center">{d.getDate()}</Table.Cell>
+          <Table.Cell textAlign="center">{diaSemana(d)}</Table.Cell>
           <Table.Cell textAlign="center">Maria</Table.Cell>
         </Table.Row>
       );
@@ -43,8 +43,8 @@ function createCells(now) {
     if (d.getDay() === 0) {
       daysOfYear.push(
         <Table.Row>
-          <Table.Cell width='4' negative textAlign="center">{d.getDate()}</Table.Cell>
-          <Table.Cell width='4' negative textAlign="center">{diaSemana(d)}</Table.Cell>
+          <Table.Cell negative textAlign="center">{d.getDate()}</Table.Cell>
+          <Table.Cell negative textAlign="center">{diaSemana(d)}</Table.Cell>
           <Table.Cell textAlign="center">Maria</Table.Cell>
         </Table.Row>
       );
@@ -54,13 +54,13 @@ function createCells(now) {
 };
 
 export default class AuxPorta extends Component {
-  state = fillMonths(4);
+  state = fillMonths(2);
   render() {
 
     return (
       <Grid>{
         this.state.map(data => (
-          <Grid.Column width='4'>
+          <Grid.Column width='8'>
             <React.Fragment>
               <Divider horizontal>
                 <Header as='h4'>
@@ -69,12 +69,12 @@ export default class AuxPorta extends Component {
               </Divider>
             </React.Fragment>
 
-            <Table celled compact >
+            <Table attached='top' basic verticalAlign='top'>
               <Table.Header>
-                <Table.Row>
+                <Responsive as={Table.Row}>
                   <Table.HeaderCell colSpan={2} textAlign="center">Data</Table.HeaderCell>
                   <Table.HeaderCell textAlign="center">Irmãs</Table.HeaderCell>
-                </Table.Row>
+                </Responsive>
               </Table.Header>
               <Table.Body>
                 {createCells(data)}
