@@ -1,12 +1,15 @@
 import React, { Component } from 'react';
 import { Header, Button, Form, Divider, Grid, Table } from 'semantic-ui-react'
 import axios from 'axios'
+import ReactNotifications from 'react-notifications-component';
+import { store } from 'react-notifications-component';
+import 'react-notifications-component/dist/theme.css';
+import 'animate.css';
 
 const host = 'http://localhost:3001/api'
 
 export default class OrgRJM extends Component {
   state = {
-    data: [],
     dataOrgRJM: [],
     cargo: '',
     optionsCargo: []
@@ -22,7 +25,18 @@ export default class OrgRJM extends Component {
 
   handleButton = (cargoValue) => () => {
     if (!cargoValue) {
-      alert("Cargo obrigatorio")
+      store.addNotification({
+        title: "Atenção!",
+        message: "Um Cargo deve ser selecionado.",
+        type: "info",
+        insert: "top",
+        container: "bottom-center",
+        animationIn: ["animated", "fadeIn"],
+        animationOut: ["animated", "fadeOut"],
+        dismiss: {
+          duration: 3000,
+        }
+      });
       return
     }
 
@@ -32,19 +46,20 @@ export default class OrgRJM extends Component {
       .then(data => data.json())
       .then(res => {
         const mesAtual = new Date();
-        for (var i = 0; i < 2; i++) {
+        for (var i = 0; i < 4; i++) {
           var dtInicio = new Date(mesAtual.getFullYear(), mesAtual.getMonth() + i, 1);
           var nomeMes = dtInicio.toLocaleString(navigator.language, { month: 'long' });
+          nomeMes = nomeMes.charAt(0).toUpperCase() + nomeMes.slice(1);
           var dtFim = new Date(dtInicio.getFullYear(), dtInicio.getMonth() + 1, 0);
           var j = 0
           for (var d = dtInicio; d <= dtFim; d.setDate(d.getDate() + 1)) {
             if (d.getDay() === 0) {
               const diaSemana = d.toLocaleString(navigator.language, { weekday: 'narrow' });
-
               fetch(host + "/putDataOrgRJM", {
                 method: "POST",
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
+                  "fullDate": d,
                   "mes": nomeMes,
                   "dia": d.getDate(),
                   "diaSemana": diaSemana,
@@ -52,13 +67,24 @@ export default class OrgRJM extends Component {
                 }),
               })
               j++;
-              if (j >= res.data.size) {
+              if (j >= res.data.length) {
                 j = 0;
               }
             }
           }
         }
-        alert("Tabela preenchida com sucesso!")
+        store.addNotification({
+          title: "Sucesso!",
+          message: "Tabela Organistas RJM preechida com sucesso.",
+          type: "success",
+          insert: "top",
+          container: "bottom-center",
+          animationIn: ["animated", "fadeIn"],
+          animationOut: ["animated", "fadeOut"],
+          dismiss: {
+            duration: 3000,
+          }
+        });
       });
   }
 
@@ -89,9 +115,10 @@ export default class OrgRJM extends Component {
   }
 
   render() {
-    const { data, dataOrgRJM, cargo, optionsCargo } = this.state
+    const { dataOrgRJM, cargo, optionsCargo } = this.state
     return (
       <div>
+        <ReactNotifications />
         <React.Fragment>
           <Divider horizontal>
             <Header as='h4'>
@@ -114,36 +141,37 @@ export default class OrgRJM extends Component {
             />
             <Form.Button size='small' onClick={this.handleButton(cargo)}>Popular</Form.Button>
           </Form.Group>
+          <Button size='small' onClick={this.handleButton2}>getTabela</Button>
         </Form>
-        <Button size='small' onClick={this.handleButton2}>getTabela</Button>
-        <br />
-        {data.map(dt => (dt.nome))}
         <Grid>
-          <Grid.Column width='4'>
-            <React.Fragment>
-              <Divider horizontal>
-                <Header as='h4'>
-                </Header>
-              </Divider>
-            </React.Fragment>
-            <Table celled compact >
-              <Table.Header>
-                <Table.Row>
-                  <Table.HeaderCell colSpan={2} textAlign="center">Data</Table.HeaderCell>
-                  <Table.HeaderCell textAlign="center">Irmãs</Table.HeaderCell>
-                </Table.Row>
-              </Table.Header>
-              <Table.Body>
-                {dataOrgRJM.map(dtRJM => (
-                  <Table.Row key={dtRJM._id}>
-                    <Table.Cell width='4' negative textAlign="center">{dtRJM.dia}</Table.Cell>
-                    <Table.Cell width='4' negative textAlign="center">{dtRJM.diaSemana}</Table.Cell>
-                    <Table.Cell textAlign="center">{dtRJM.nome}</Table.Cell>
+          {dataOrgRJM.map(dtRJM => (
+            <Grid.Column key={dtRJM._id} width='4'>
+              <React.Fragment>
+                <Divider horizontal>
+                  <Header as='h4'>
+                    {dtRJM._id}
+                  </Header>
+                </Divider>
+              </React.Fragment>
+              <Table celled compact >
+                <Table.Header>
+                  <Table.Row>
+                    <Table.HeaderCell colSpan={2} textAlign="center">Data</Table.HeaderCell>
+                    <Table.HeaderCell textAlign="center">Irmãs</Table.HeaderCell>
                   </Table.Row>
-                ))}
-              </Table.Body>
-            </Table>
-          </Grid.Column>
+                </Table.Header>
+                <Table.Body>
+                  {dtRJM.mesItem.map(dtRJMItem => (
+                    <Table.Row key={dtRJMItem._id}>
+                      <Table.Cell width='4' negative textAlign="center">{dtRJMItem.dia}</Table.Cell>
+                      <Table.Cell width='4' negative textAlign="center">{dtRJMItem.diaSemana}</Table.Cell>
+                      <Table.Cell textAlign="center">{dtRJMItem.nome}</Table.Cell>
+                    </Table.Row>
+                  ))}
+                </Table.Body>
+              </Table>
+            </Grid.Column>
+          ))}
         </Grid>
       </div>
     )

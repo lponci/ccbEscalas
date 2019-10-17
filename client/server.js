@@ -17,12 +17,12 @@ const dbRoute =
   'mongodb+srv://escalaAdmin:HdwAAZKPH4u8lHvU@escalasdb-0noh7.gcp.mongodb.net/test?retryWrites=true&w=majority';
 
 // connects our back end code with the database
-mongoose.connect(dbRoute, { useNewUrlParser: true });
+mongoose.connect(dbRoute, { useNewUrlParser: true, useUnifiedTopology: true });
 
 let db = mongoose.connection;
 
-const timestamp = new Date();
-db.once('open', () => console.log('Connected to DB - ' + timestamp));
+const timestamp = new Date().toLocaleString();
+db.once('open', () => console.log(`(${timestamp}): Connected to MongoDB`));
 
 //++++PRINTAR COLLECTIONS+++
 // db.on('open', function () {
@@ -196,7 +196,9 @@ router.delete('/deleteCargo', (req, res) => {
 
 router.get('/getDataOrgRJM', (req, res) => {
   DataOrgRJM.aggregate([
-    { $group: { _id: "$mes", books: { $push: "$$ROOT" } } }
+    { $sort : { fullDate : 1 } },
+    { $group: { _id: "$mes", mesItem: { $push: "$$ROOT" } } },
+    { $sort : { _id : -1 } },
   ]).exec(function (err, dataOrgRJM) {
     if (err) return res.json({ success: false, error: err });
     return res.json({ success: true, dataOrgRJM: dataOrgRJM });
@@ -206,7 +208,7 @@ router.get('/getDataOrgRJM', (req, res) => {
 router.post('/putDataOrgRJM', (req, res) => {
   let dataOrgRJM = new DataOrgRJM();
 
-  const { mes, dia, diaSemana, nome } = req.body;
+  const { mes, dia, diaSemana, nome, fullDate } = req.body;
 
   if (!mes || !dia || !diaSemana || !nome) {
     return res.json({
@@ -215,6 +217,8 @@ router.post('/putDataOrgRJM', (req, res) => {
       body: req.body
     });
   }
+  
+  dataOrgRJM.fullDate = fullDate;
   dataOrgRJM.mes = mes;
   dataOrgRJM.dia = dia;
   dataOrgRJM.diaSemana = diaSemana;
@@ -234,12 +238,10 @@ router.post('/updateDataOrgRJM', (req, res) => {
 });
 
 router.delete('/deleteAllDataOrgRJM', (req, res) => {
-  DataOrgRJM.deleteMany(function (err) {
-    if (err) {
-      throw err;
-    } else {
-      console.log('Collection DataOrgRJM deleted.');
-    }
+  DataOrgRJM.deleteMany((err) => {
+    if (err) return res.send(err);
+    console.log('Collection DataOrgRJM deleted.');
+    return res.json({ success: true });
   });
 });
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -248,4 +250,4 @@ router.delete('/deleteAllDataOrgRJM', (req, res) => {
 app.use('/api', router);
 
 // launch our backend into a port
-app.listen(API_PORT, () => console.log(`LISTENING ON PORT ${API_PORT}`));
+app.listen(API_PORT, () => console.log(`(${timestamp}): Listening on port ${API_PORT}`));

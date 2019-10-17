@@ -3,9 +3,10 @@ const Schema = mongoose.Schema;
 
 const DataOrgRJMSchema = new Schema(
   {
+    fullDate: Date,
     nome: String,
     mes: String,
-    dia: String,
+    dia: Number,
     diaSemana: String
   },
   { timestamps: true }
