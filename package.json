@@ -1,4 +1,5 @@
 {
+  "homepage": "http://lponci.github.io/ccbEscalas",
   "name": "my-app",
   "version": "0.1.0",
   "private": true,
@@ -17,11 +18,15 @@
     "react-scripts": "0.9.5",
     "semantic-ui-react": "^0.88.1"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "gh-pages": "^2.1.1"
+  },
   "scripts": {
     "start": "concurrently \"cd client && node server.js\" \"react-scripts start\"",
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d build"
   }
 }
