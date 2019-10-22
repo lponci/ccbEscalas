@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { Button, Icon, Table, Modal, Radio, Form } from 'semantic-ui-react'
 import axios from 'axios'
+import { store } from 'react-notifications-component';
 
 const host = 'http://localhost:3001/api'
 
@@ -66,11 +67,37 @@ export default class ListaContato extends Component {
   close = () => this.setState({ open: false, name: '', phone: '', cargo: '' })
 
   toDelete = (dimmer) => () => {
-    !this.state.value ? alert("Selecione um registro para deletar") : this.setState({ dimmer, openDelete: true })
+    !this.state.value ? 
+      store.addNotification({
+         title: "Atenção!",
+         message: "Selecione um registro para deletar.",
+         type: "warning",
+         insert: "top",
+         container: "bottom-center",
+         animationIn: ["animated", "fadeIn"],
+         animationOut: ["animated", "fadeOut"],
+         dismiss: {
+           duration: 3000,
+         }
+       }) :
+     this.setState({ dimmer, openDelete: true })
   }
 
   toEdit = (dimmer) => () => {
-    !this.state.value ? alert("Selecione um registro para editar") : (
+    !this.state.value ? 
+    store.addNotification({
+         title: "Atenção!",
+         message: "Selecione um registro para editar.",
+         type: "warning",
+         insert: "top",
+         container: "bottom-center",
+         animationIn: ["animated", "fadeIn"],
+         animationOut: ["animated", "fadeOut"],
+         dismiss: {
+           duration: 3000,
+         }
+       }) :
+        (
       axios.get(host + "/getContatoById/" + this.state.value)
         .then(res => (
           this.setState({
@@ -103,7 +130,36 @@ export default class ListaContato extends Component {
       cargo: cargo,
       phone: phone
     }).then(response => {
-      response.data.success ? this.close() : alert(response.data.error)
+      response.data.success ? 
+      (
+        this.close(),
+     store.addNotification({
+         title: "Sucesso!",
+         message: "Cadastro realizado com sucesso",
+         type: "success",
+         insert: "top",
+         container: "bottom-center",
+         animationIn: ["animated", "fadeIn"],
+         animationOut: ["animated", "fadeOut"],
+         dismiss: {
+           duration: 3000,
+         }
+       })
+     )
+
+      : 
+       store.addNotification({
+         title: "Erro!",
+         message: response.data.error,
+         type: "danger",
+         insert: "top",
+         container: "bottom-center",
+         animationIn: ["animated", "fadeIn"],
+         animationOut: ["animated", "fadeOut"],
+         dismiss: {
+           duration: 3000,
+         }
+       })
     });
   }
 
@@ -113,7 +169,20 @@ export default class ListaContato extends Component {
         id: this.state.value
       }
     }).then(response => {
-      response.data.success ? this.closeDelete() : alert(response.data.error)
+      response.data.success ? (
+      this.closeDelete(),
+       store.addNotification({
+         title: "Sucesso!",
+         message: "Cadastro realizado com sucesso",
+         type: "success",
+         insert: "top",
+         container: "bottom-center",
+         animationIn: ["animated", "fadeIn"],
+         animationOut: ["animated", "fadeOut"],
+         dismiss: {
+           duration: 3000,
+         }
+       })) : alert(response.data.error)
     });
   }
 

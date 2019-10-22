@@ -17,6 +17,7 @@ import {
 
 const FixedMenuLayout = () => (
   <div>
+  
   <ReactNotifications />
     {/* <Menu fixed='top' inverted>
        <Container>

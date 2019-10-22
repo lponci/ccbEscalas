@@ -124,6 +124,8 @@ export default class MenuPrincipal extends Component {
                     Escalas PJ3
                   </Menu.Item>
                 </Menu>
+
+                
               {/* <Container fluid> */}
 
                
@@ -136,20 +138,20 @@ export default class MenuPrincipal extends Component {
 
                 {/* <Grid.Column mobile={16} computer={10} > */}
                 {this.state.showMeAuxPorta ?
-                  <Segment raised>
+                  <Container >
                     <Divider horizontal>
                       <Header as='h4'>
                         Auxiliares da Porta
                       </Header>
                     </Divider>
                     <AuxPorta />
-                  </Segment>
+                  </Container>
                   : null
                 }
                 {this.state.showMeRJM ?
-                  <Segment raised>
+                  <Container >
                     <OrgRJM />
-                  </Segment>
+                  </Container >
                   : null
                 }
                 {this.state.showMePorteiros ?
@@ -159,15 +161,15 @@ export default class MenuPrincipal extends Component {
                   : null
                 }
                 {this.state.showMeContatos ?
-                  <Segment raised>
+                  <Container >
                     <ListaContato />
-                  </Segment>
+                  </Container >
                   : null
                 }
                 {this.state.showMeConfigs ?
-                  <Segment raised>
+                  <Container >
                     <Configuracoes />
-                  </Segment>
+                  </Container >
                   : null
                 }
 

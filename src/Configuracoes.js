@@ -23,21 +23,18 @@ export default class Configuracoes extends Component {
 
   handleButton = (cargoValue) => () => {
     if (!cargoValue) {
-      
-      <Notificacoes type='alerta' msg='Um Cargo deve ser selecionado.' />
-      console.log('depois')
-      // store.addNotification({
-      //   title: "Atenção!",
-      //   message: "Um Cargo deve ser selecionado.",
-      //   type: "warning",
-      //   insert: "top",
-      //   container: "top-right",
-      //   animationIn: ["animated", "fadeIn"],
-      //   animationOut: ["animated", "fadeOut"],
-      //   dismiss: {
-      //     duration: 3000,
-      //   }
-      // });
+       store.addNotification({
+         title: "Atenção!",
+         message: "Um Cargo deve ser selecionado.",
+         type: "warning",
+         insert: "top",
+         container: "bottom-center",
+         animationIn: ["animated", "fadeIn"],
+         animationOut: ["animated", "fadeOut"],
+         dismiss: {
+           duration: 3000,
+         }
+       });
       return
     }
 
