@@ -13,8 +13,9 @@ app.use(cors());
 const router = express.Router();
 
 // this is our MongoDB database
-const dbRoute =
-  'mongodb+srv://escalaAdmin:HdwAAZKPH4u8lHvU@escalasdb-0noh7.gcp.mongodb.net/test?retryWrites=true&w=majority';
+
+
+var dbRoute = process.env.MONGOLAB_URI;
 
 // connects our back end code with the database
 mongoose.connect(dbRoute, { useNewUrlParser: true, useUnifiedTopology: true });
