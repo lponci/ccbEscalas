@@ -30,5 +30,5 @@
     "deploy": "gh-pages -d build",
     "heroku-postbuild": "cd client && npm install && npm run build"
   },
-   "proxy": "http://localhost:5000"
+   "proxy": "http://localhost:5000/api"
 }

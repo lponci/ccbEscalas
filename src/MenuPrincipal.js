@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Image, Menu, Icon, Segment, Sidebar, Header, Divider, Container } from 'semantic-ui-react'
+import { Image, Menu, Icon, Sidebar, Header, Divider, Container } from 'semantic-ui-react'
 import AuxPorta from './AuxPorta'
 import OrgRJM from './OrgRJM'
 import Porteiros from './Porteiros';
@@ -39,13 +39,7 @@ export default class MenuPrincipal extends Component {
 
     return (
       <div>
-     
-     
             <Sidebar.Pushable  >
-
-
-
-
               <Sidebar
                 as={Menu}
                 animation='push'
@@ -56,8 +50,6 @@ export default class MenuPrincipal extends Component {
                 visible={visible}
                 width='thin'
               >
-                {/* <Segment raised> */}
-                {/* <Menu fluid vertical > */}
                 <Menu.Item>
                   <Icon name='calendar alternate outline' />
                   Escalas
@@ -126,17 +118,6 @@ export default class MenuPrincipal extends Component {
                 </Menu>
 
                 
-              {/* <Container fluid> */}
-
-               
-                {/* </Container> */}
-                {/* </Menu> */}
-                {/* </Segment> */}
-
-                {/* </Grid.Column> */}
-                {/* </Responsive> */}
-
-                {/* <Grid.Column mobile={16} computer={10} > */}
                 {this.state.showMeAuxPorta ?
                   <Container >
                     <Divider horizontal>
@@ -150,14 +131,24 @@ export default class MenuPrincipal extends Component {
                 }
                 {this.state.showMeRJM ?
                   <Container >
+                     <Divider horizontal>
+                      <Header as='h4'>
+                        Organistas da Reunião de Jovens e Menores
+                      </Header>
+                    </Divider>
                     <OrgRJM />
                   </Container >
                   : null
                 }
                 {this.state.showMePorteiros ?
-                  <Segment raised>
+                  <Container >
+                    <Divider horizontal>
+                      <Header as='h4'>
+                        Porteiros
+                      </Header>
+                    </Divider>
                     <Porteiros />
-                  </Segment>
+                  </Container >
                   : null
                 }
                 {this.state.showMeContatos ?

@@ -65,7 +65,7 @@ export default class Porteiros extends Component {
       <Grid columns='4'>
       
         {this.state.map(data => (
-          <Grid.Column >
+          <Grid.Column computer={4} mobile={8}>
           
           <React.Fragment>
             <Divider horizontal>
@@ -75,7 +75,7 @@ export default class Porteiros extends Component {
             </Divider>
           </React.Fragment>
 
-          <Table celled compact >
+          <Table unstackable celled compact >
             <Table.Header fullWidth>
               <Table.Row>
                 <Table.HeaderCell colSpan={2} textAlign="center">Data</Table.HeaderCell>

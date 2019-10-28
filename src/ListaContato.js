@@ -1,10 +1,9 @@
 import React, { Component } from 'react'
-import { Button, Icon, Table, Modal, Radio, Form } from 'semantic-ui-react'
+import { Button, Icon, Table, Modal, Radio, Form, Menu } from 'semantic-ui-react'
 import axios from 'axios'
 import { store } from 'react-notifications-component';
 
 /* eslint-disable */ 
-const host = 'http://localhost:3001/api'
 
 const normalizeInput = (value, previousValue) => {
   if (!value) return value;
@@ -52,13 +51,13 @@ export default class ListaContato extends Component {
   }
 
   getDataFromDb = () => {
-    fetch(host + "/getContato")
+    fetch("/getContato")
       .then(data => data.json())
       .then(res => this.setState({ data: res.data }));
   }
 
   getCargoFromDb = () => {
-    fetch(host + "/getCargo")
+    fetch("/getCargo")
       .then(cargo => cargo.json())
       .then(res => this.setState({ optionsCargo: res.cargo }));
   }
@@ -99,7 +98,7 @@ export default class ListaContato extends Component {
          }
        }) :
         (
-      axios.get(host + "/getContatoById/" + this.state.value)
+      axios.get("/getContatoById/" + this.state.value)
         .then(res => (
           this.setState({
             dimmer,
@@ -126,7 +125,7 @@ export default class ListaContato extends Component {
 
   handlePutData = () => {
     const { name, phone, cargo } = this.state
-    axios.post(host + "/putContato", {
+    axios.post("/putContato", {
       nome: name,
       cargo: cargo,
       phone: phone
@@ -165,7 +164,7 @@ export default class ListaContato extends Component {
   }
 
   handleDeleteData = () => {
-    axios.delete(host + "/deleteContato", {
+    axios.delete("/deleteContato", {
       data: {
         id: this.state.value
       }
@@ -189,7 +188,7 @@ export default class ListaContato extends Component {
 
   handleUpdateData = () => {
     const { name, phone, cargo } = this.state
-    axios.post(host + "/updateContato", {
+    axios.post("/updateContato", {
       id: this.state.value,
       update: {
         nome: name,
@@ -210,7 +209,7 @@ export default class ListaContato extends Component {
     const { open, openEdit, openDelete, dimmer, data, name, cargo, phone, optionsCargo } = this.state
     return (
       <div>
-        <Table>
+        <Table unstackable>
           <Table.Header>
             <Table.Row>
               <Table.HeaderCell />
@@ -259,6 +258,22 @@ export default class ListaContato extends Component {
                   </Button>
               </Table.HeaderCell>
             </Table.Row>
+             <Table.Row>
+                <Table.HeaderCell colSpan='3'>
+                  <Menu floated='right' pagination>
+                    <Menu.Item as='a' icon>
+                    <Icon name='chevron left' />
+            </Menu.Item>
+            <Menu.Item as='a'>1</Menu.Item>
+            <Menu.Item as='a'>2</Menu.Item>
+            <Menu.Item as='a'>3</Menu.Item>
+            <Menu.Item as='a'>4</Menu.Item>
+            <Menu.Item as='a' icon>
+              <Icon name='chevron right' />
+            </Menu.Item>
+          </Menu>
+        </Table.HeaderCell>
+      </Table.Row>
           </Table.Footer>
         </Table>
 

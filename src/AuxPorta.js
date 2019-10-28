@@ -54,13 +54,13 @@ function createCells(now) {
 };
 
 export default class AuxPorta extends Component {
-  state = fillMonths(2);
+  state = fillMonths(4);
   render() {
 
     return (
       <Grid>{
         this.state.map(data => (
-          <Grid.Column width='8'>
+          <Grid.Column computer={4} mobile={8}>
             <React.Fragment>
               <Divider horizontal>
                 <Header as='h4'>
@@ -69,7 +69,7 @@ export default class AuxPorta extends Component {
               </Divider>
             </React.Fragment>
 
-            <Table attached='top' basic verticalAlign='top'>
+            <Table unstackable celled compact >
               <Table.Header>
                 <Responsive as={Table.Row}>
                   <Table.HeaderCell colSpan={2} textAlign="center">Data</Table.HeaderCell>
