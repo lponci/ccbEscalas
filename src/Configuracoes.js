@@ -1,10 +1,9 @@
 import React, { Component } from 'react';
-import { Header, Button, Form, Divider, Grid, Table, Container } from 'semantic-ui-react'
+import { Header, Button, Form, Divider, Grid, Table } from 'semantic-ui-react'
 import axios from 'axios'
 import { store } from 'react-notifications-component';
-import Notificacoes from './Notificacoes'
 
-const host = 'http://localhost:3001/api'
+//const host = 'http://localhost:3001/api'
 
 export default class Configuracoes extends Component {
   state = {
@@ -40,7 +39,7 @@ export default class Configuracoes extends Component {
 
     this.deleteAllDataOrgRJMFromDb()
 
-    fetch(host + "/getNomeContatoByCargo/" + cargoValue)
+    fetch("/api/getNomeContatoByCargo/" + cargoValue)
       .then(data => data.json())
       .then(res => {
         const mesAtual = new Date();
@@ -53,7 +52,7 @@ export default class Configuracoes extends Component {
           for (var d = dtInicio; d <= dtFim; d.setDate(d.getDate() + 1)) {
             if (d.getDay() === 0) {
               const diaSemana = d.toLocaleString(navigator.language, { weekday: 'narrow' });
-              fetch(host + "/putDataOrgRJM", {
+              fetch("/api/putDataOrgRJM", {
                 method: "POST",
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
@@ -87,7 +86,7 @@ export default class Configuracoes extends Component {
   }
 
   getDataOrgRJMFromDb = () => {
-    fetch(host + "/getDataOrgRJM")
+    fetch("/api/getDataOrgRJM")
       .then(dataOrgRJM => dataOrgRJM.json())
       .then(res => {
         console.log(res.dataOrgRJM)
@@ -96,13 +95,13 @@ export default class Configuracoes extends Component {
   }
 
   getCargoFromDb = () => {
-    fetch(host + "/getCargo")
+    fetch("/api/getCargo")
       .then(cargo => cargo.json())
       .then(res => this.setState({ optionsCargo: res.cargo }));
   }
 
   deleteAllDataOrgRJMFromDb = () => {
-    axios.delete(host + "/deleteAllDataOrgRJM").then(res => {
+    axios.delete("/api/deleteAllDataOrgRJM").then(res => {
       console.log(res);
       console.log(res.data)
     });

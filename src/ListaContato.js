@@ -3,6 +3,7 @@ import { Button, Icon, Table, Modal, Radio, Form } from 'semantic-ui-react'
 import axios from 'axios'
 import { store } from 'react-notifications-component';
 
+/* eslint-disable */ 
 const host = 'http://localhost:3001/api'
 
 const normalizeInput = (value, previousValue) => {

@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Grid, Image, Menu, Icon, Segment, Sidebar, Header, Divider, Container } from 'semantic-ui-react'
+import { Image, Menu, Icon, Segment, Sidebar, Header, Divider, Container } from 'semantic-ui-react'
 import AuxPorta from './AuxPorta'
 import OrgRJM from './OrgRJM'
 import Porteiros from './Porteiros';
@@ -167,7 +167,7 @@ export default class MenuPrincipal extends Component {
                   : null
                 }
                 {this.state.showMeConfigs ?
-                  <Container >
+                  <Container  >
                     <Configuracoes />
                   </Container >
                   : null

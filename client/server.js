@@ -7,13 +7,12 @@ const Data = require('./data');
 const Cargo = require('./cargo');
 const DataOrgRJM = require('./dataOrgRJM');
 
-const API_PORT = 3001;
+const API_PORT = 5000;
 const app = express();
 app.use(cors());
 const router = express.Router();
 
 // this is our MongoDB database
-
 
 var dbRoute = process.env.MONGOLAB_URI;
 

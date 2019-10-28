@@ -8,10 +8,7 @@ import 'animate.css';
 
 import {
   Container,
-  Dropdown,
-  Image,
   List,
-  Menu,
   Segment,
 } from 'semantic-ui-react'
 
@@ -19,30 +16,6 @@ const FixedMenuLayout = () => (
   <div>
   
   <ReactNotifications />
-    {/* <Menu fixed='top' inverted>
-       <Container>
-        <Menu.Item as='a' header>
-          <Image size='mini' src='https://cdn0.iconfinder.com/data/icons/economico-a-business-icon-set/74/calendar-calender-timetable-512.png' style={{ marginRight: '1.5em' }} />
-          Escalas
-        </Menu.Item>
-        <Menu.Item as='a'>Inicio</Menu.Item>
-
-        <Dropdown item simple text='Escalas'>
-          <Dropdown.Menu>
-            <Dropdown.Item>Auxiliares da Porta</Dropdown.Item>
-            <Dropdown.Item>
-              <i className='dropdown icon' />
-              <span className='text'>Organistas</span>
-              <Dropdown.Menu>
-                <Dropdown.Item>Reunião de Jovens e Menores</Dropdown.Item>
-                <Dropdown.Item>Culto Oficial</Dropdown.Item>
-              </Dropdown.Menu>
-            </Dropdown.Item>
-            <Dropdown.Item>Porteiros</Dropdown.Item>
-          </Dropdown.Menu>
-        </Dropdown>
-      </Container>
-    </Menu> */}
     <MenuPrincipal />
 
     <Segment inverted vertical>
