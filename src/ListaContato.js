@@ -168,7 +168,7 @@ export default class ListaContato extends Component {
         id: this.state.value
       }
     }).then(response => {
-      console.log(response.data)
+      console.log(response)
       if (response.data.success) {
         this.closeDelete()
         store.addNotification({

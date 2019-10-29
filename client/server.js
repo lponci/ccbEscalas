@@ -118,7 +118,7 @@ router.post('/updateContato', (req, res) => {
 router.delete('/deleteContato', (req, res) => {
   const { id } = req.body;
   Data.findByIdAndRemove(id, (err) => {
-    if (err) return res.send(err);
+    if (err) return res.json(err);
     return res.json({ success: true });
   });
 });
