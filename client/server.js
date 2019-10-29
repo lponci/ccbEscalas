@@ -196,9 +196,11 @@ router.delete('/deleteCargo', (req, res) => {
 
 router.get('/getDataOrgRJM', (req, res) => {
   DataOrgRJM.aggregate([
-    { $sort : { fullDate : 1 } },
+
+
     { $group: { _id: "$mes", mesItem: { $push: "$$ROOT" } } },
-    { $sort : { _id : -1 } },
+    { $sort : { 'mesItem.fullDate' : 1 } },
+    
   ]).exec(function (err, dataOrgRJM) {
     if (err) return res.json({ success: false, error: err });
     return res.json({ success: true, dataOrgRJM: dataOrgRJM });

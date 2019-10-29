@@ -130,10 +130,10 @@ export default class ListaContato extends Component {
       cargo: cargo,
       phone: phone
     }).then(response => {
-      response.data.success ? 
-      (
-        this.close(),
-     store.addNotification({
+      console.log(response.data)
+      if (response.data.success) {
+        this.close()
+        store.addNotification({
          title: "Sucesso!",
          message: "Cadastro realizado com sucesso",
          type: "success",
@@ -145,10 +145,8 @@ export default class ListaContato extends Component {
            duration: 3000,
          }
        })
-     )
-
-      : 
-       store.addNotification({
+      } else {
+        store.addNotification({
          title: "Erro!",
          message: response.data.error,
          type: "danger",
@@ -160,6 +158,7 @@ export default class ListaContato extends Component {
            duration: 3000,
          }
        })
+      }
     });
   }
 
@@ -169,11 +168,12 @@ export default class ListaContato extends Component {
         id: this.state.value
       }
     }).then(response => {
-      response.data.success ? (
-      this.closeDelete(),
-       store.addNotification({
+      console.log(response.data)
+      if (response.data.success) {
+        this.closeDelete()
+        store.addNotification({
          title: "Sucesso!",
-         message: "Cadastro realizado com sucesso",
+         message: "Cadastro removido com sucesso",
          type: "success",
          insert: "top",
          container: "bottom-center",
@@ -182,7 +182,22 @@ export default class ListaContato extends Component {
          dismiss: {
            duration: 3000,
          }
-       })) : alert(response.data.error)
+       })
+
+      } else {
+        store.addNotification({
+         title: "Erro!",
+         message: response.data.error,
+         type: "danger",
+         insert: "top",
+         container: "bottom-center",
+         animationIn: ["animated", "fadeIn"],
+         animationOut: ["animated", "fadeOut"],
+         dismiss: {
+           duration: 3000,
+         }
+       })
+      }
     });
   }
 
@@ -196,7 +211,36 @@ export default class ListaContato extends Component {
         phone: phone
       }
     }).then(response => {
-      response.data.success ? this.closeEdit() : alert(response.data.error)
+      console.log(response.data)
+      if (response.data.success) {
+        this.closeEdit()
+        store.addNotification({
+         title: "Sucesso!",
+         message: "Cadastro alterado com sucesso",
+         type: "success",
+         insert: "top",
+         container: "bottom-center",
+         animationIn: ["animated", "fadeIn"],
+         animationOut: ["animated", "fadeOut"],
+         dismiss: {
+           duration: 3000,
+         }
+       })
+
+      } else {
+        store.addNotification({
+         title: "Erro!",
+         message: response.data.error,
+         type: "danger",
+         insert: "top",
+         container: "bottom-center",
+         animationIn: ["animated", "fadeIn"],
+         animationOut: ["animated", "fadeOut"],
+         dismiss: {
+           duration: 3000,
+         }
+       })
+      }
     });
   }
 
@@ -259,7 +303,7 @@ export default class ListaContato extends Component {
               </Table.HeaderCell>
             </Table.Row>
              <Table.Row>
-                <Table.HeaderCell colSpan='3'>
+                <Table.HeaderCell colSpan='4'>
                   <Menu floated='right' pagination>
                     <Menu.Item as='a' icon>
                     <Icon name='chevron left' />

@@ -7,7 +7,8 @@ export default class Configuracoes extends Component {
   state = {
     dataOrgRJM: [],
     cargo: '',
-    optionsCargo: []
+    optionsCargo: [],
+    numMeses: ''
   }
 
   componentDidMount() {
@@ -18,7 +19,7 @@ export default class Configuracoes extends Component {
     this.getDataOrgRJMFromDb()
   }
 
-  handleButton = (cargoValue) => () => {
+  handleButton = (cargoValue, numMeses) => () => {
     if (!cargoValue) {
        store.addNotification({
          title: "Atenção!",
@@ -41,7 +42,7 @@ export default class Configuracoes extends Component {
       .then(data => data.json())
       .then(res => {
         const mesAtual = new Date();
-        for (var i = 0; i < 4; i++) {
+        for (var i = 0; i < numMeses; i++) {
           var dtInicio = new Date(mesAtual.getFullYear(), mesAtual.getMonth() + i, 1);
           var nomeMes = dtInicio.toLocaleString(navigator.language, { month: 'long' });
           nomeMes = nomeMes.charAt(0).toUpperCase() + nomeMes.slice(1);
@@ -110,7 +111,7 @@ export default class Configuracoes extends Component {
   }
 
   render() {
-    const { dataOrgRJM, cargo, optionsCargo } = this.state
+    const { numMeses, dataOrgRJM, cargo, optionsCargo } = this.state
     return (
       <div>
         <React.Fragment>
@@ -122,7 +123,13 @@ export default class Configuracoes extends Component {
         </React.Fragment>
         <Form>
           <Form.Group>
-            <Form.Select
+          <Form.Input 
+            type='number'
+            style={{width: '70px'}}
+            value={numMeses}
+            onChange={event => this.setState({numMeses: event.target.value.replace(/\D/,'')})}/>
+            {console.log(this.state.numMeses)}
+          <Form.Select
               clearable
               fluid
               name='cargo'
@@ -132,7 +139,7 @@ export default class Configuracoes extends Component {
               options={optionsCargo}
               placeholder='Cargo'
             />
-            <Form.Button onClick={this.handleButton(cargo)}>Popular</Form.Button>
+            <Form.Button onClick={this.handleButton(cargo, numMeses)}>Popular</Form.Button>
           </Form.Group>
         </Form>
         <Button size='small' onClick={this.handleButton2}>getTabela</Button>
