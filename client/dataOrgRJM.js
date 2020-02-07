@@ -6,6 +6,7 @@ const DataOrgRJMSchema = new Schema(
     fullDate: Date,
     nome: String,
     mes: String,
+    numMes: Number,
     dia: Number,
     diaSemana: String
   },

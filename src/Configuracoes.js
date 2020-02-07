@@ -15,7 +15,7 @@ export default class Configuracoes extends Component {
     this.getCargoFromDb()
   }
 
-  handleButton2 = () => {
+  handleButton2 = (cargoValue) => {
     this.getDataOrgRJMFromDb()
   }
 
@@ -46,6 +46,7 @@ export default class Configuracoes extends Component {
           var dtInicio = new Date(mesAtual.getFullYear(), mesAtual.getMonth() + i, 1);
           var nomeMes = dtInicio.toLocaleString(navigator.language, { month: 'long' });
           nomeMes = nomeMes.charAt(0).toUpperCase() + nomeMes.slice(1);
+          var numMes = dtInicio.getMonth();
           var dtFim = new Date(dtInicio.getFullYear(), dtInicio.getMonth() + 1, 0);
           var j = 0
           for (var d = dtInicio; d <= dtFim; d.setDate(d.getDate() + 1)) {
@@ -57,6 +58,7 @@ export default class Configuracoes extends Component {
                 body: JSON.stringify({
                   "fullDate": d,
                   "mes": nomeMes,
+                  "numMes": numMes,
                   "dia": d.getDate(),
                   "diaSemana": diaSemana,
                   "nome": res.data[j].nome
@@ -140,9 +142,10 @@ export default class Configuracoes extends Component {
               placeholder='Cargo'
             />
             <Form.Button onClick={this.handleButton(cargo, numMeses)}>Popular</Form.Button>
+            <Form.Button onClick={this.handleButton2(cargo)}>Mostrar Tabela RJM</Form.Button>
           </Form.Group>
         </Form>
-        <Button size='small' onClick={this.handleButton2}>getTabela</Button>
+        
         <Grid>
 
           {dataOrgRJM.map(dtRJM => (

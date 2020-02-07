@@ -11,6 +11,7 @@
     "cors": "^2.8.5",
     "express": "^4.17.1",
     "mongoose": "^5.7.3",
+    "mongoose-auto-increment": "^5.0.1",
     "morgan": "^1.9.1",
     "react": "^16.9.0",
     "react-dom": "^16.9.0",
@@ -30,5 +31,5 @@
     "deploy": "gh-pages -d build",
     "heroku-postbuild": "cd client && npm install && npm run build"
   },
-   "proxy": "http://localhost:5000/api"
+  "proxy": "http://localhost:5000/api"
 }

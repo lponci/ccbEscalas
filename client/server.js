@@ -16,6 +16,9 @@ const router = express.Router();
 
 var dbRoute = process.env.MONGOLAB_URI;
 
+console.log(dbRoute)
+if (!dbRoute) dbRoute ='mongodb+srv://escalaAdmin:HdwAAZKPH4u8lHvU@escalasdb-0noh7.gcp.mongodb.net/test?retryWrites=true&w=majority'
+
 // connects our back end code with the database
 mongoose.connect(dbRoute, { useNewUrlParser: true, useUnifiedTopology: true });
 
@@ -197,10 +200,13 @@ router.delete('/deleteCargo', (req, res) => {
 router.get('/getDataOrgRJM', (req, res) => {
   DataOrgRJM.aggregate([
 
-
+    { $sort : { "fullDate" : 1 } },
+    { $project : { _id : 0 , fullDate : 0, createdAt: 0, updatedAt: 0, __v: 0 } } ,
     { $group: { _id: "$mes", mesItem: { $push: "$$ROOT" } } },
-    { $sort : { 'mesItem.fullDate' : 1 } },
+    { $sort : { "mesItem.numMes" : 1 } },
     
+
+   
   ]).exec(function (err, dataOrgRJM) {
     if (err) return res.json({ success: false, error: err });
     return res.json({ success: true, dataOrgRJM: dataOrgRJM });
@@ -210,7 +216,7 @@ router.get('/getDataOrgRJM', (req, res) => {
 router.post('/putDataOrgRJM', (req, res) => {
   let dataOrgRJM = new DataOrgRJM();
 
-  const { mes, dia, diaSemana, nome, fullDate } = req.body;
+  const { mes, numMes, dia, diaSemana, nome, fullDate } = req.body;
 
   if (!mes || !dia || !diaSemana || !nome) {
     return res.json({
@@ -222,6 +228,7 @@ router.post('/putDataOrgRJM', (req, res) => {
   
   dataOrgRJM.fullDate = fullDate;
   dataOrgRJM.mes = mes;
+  dataOrgRJM.numMes = numMes;
   dataOrgRJM.dia = dia;
   dataOrgRJM.diaSemana = diaSemana;
   dataOrgRJM.nome = nome;

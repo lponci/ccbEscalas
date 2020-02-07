@@ -47,7 +47,7 @@ export default class MenuPrincipal extends Component {
                 inverted
                 onHide={this.setVisible(false)}
                 vertical
-                visible={visible}
+                visible='true'
                 width='thin'
               >
                 <Menu.Item>
